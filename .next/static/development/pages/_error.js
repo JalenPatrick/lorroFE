@@ -6142,7 +6142,7 @@ if (hadRuntime) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __NEXT_REGISTER_PAGE('/_error', function() {
-module.exports = __webpack_require__(/*! /Users/jalen/Lorro/node_modules/next/dist/pages/_error.js */"./node_modules/next/dist/pages/_error.js");
+module.exports = __webpack_require__(/*! /Users/jalen/School/Capstone/Lorro_FE/node_modules/next/dist/pages/_error.js */"./node_modules/next/dist/pages/_error.js");
 
 return { page: module.exports.default }});
 

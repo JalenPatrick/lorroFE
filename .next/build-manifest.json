@@ -11,11 +11,15 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/upload": [
+    "/record": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/record": [
+    "/index": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]

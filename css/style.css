@@ -1,0 +1,13 @@
+.notes {
+	display: flex;
+	justify-content: space-around;
+}
+
+.note {
+	text-align: center;
+}
+
+.note_bold {
+	font-weight: bold;
+	font-size: 30px;
+}

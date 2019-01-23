@@ -18,10 +18,17 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 const styles = {
     textAlign: "center",
+}
+
+const styles2 = {
+    textAlign: "center",
+    marginTop:'200'
 }
 
 const pageStyles = {
@@ -52,13 +59,15 @@ const labelStyle = {
 
 }
 
+
 class upload extends Component {
     constructor() {
         super()
         this.state = {
             selectedFile: null,
             selectedTarget: null,
-            loaded: 0
+            loaded: 0,
+            loading: false,
         }
     }
 
@@ -69,17 +78,19 @@ class upload extends Component {
     }
 
     handleUpload = () => {
-        alert(this.state.selectedFile.name);
+        console.log("is loading");
+        this.setState({loading: true});
         const data = new FormData()
-        data.append('file', this.state.selectedFile, this.state.selectedFile.name)
+        data.append('sample', this.state.selectedFile)
 
-        // send data to endpoint via axios
-        // axios.post(endpoint, data)
-        //     .then(res => {
-        //         console.log(res.statusText)
-        //     })
-
-        document.location.href = "/results"
+        //send data to endpoint via axios
+        axios.post("http://localhost:8080/voicecompare", data)
+            .then(res => {
+                console.log(res.statusText);
+                console.log(res);
+            }).then(() => {
+                document.location.href = "/results"
+            })
     }
 
     handleselectedFile = event => {
@@ -91,10 +102,21 @@ class upload extends Component {
 
     render() {
     const fileUploaded = this.state.selectedFile
+    const isLoading = this.state.loading
     return(
         <Layout>
             <Paper elevation={"1"}>
                 <Grid container spacing={24} style={pageStyles} direction="row" justifyContent="center" alignItems="center" justify="center">
+                    
+                    {isLoading &&  
+                        <Grid item xs={12} md={6}>
+                            <div style={{height:"100vh", paddingTop:'35vh'}}>
+                                <Typography variant="h4" style={styles2} gutterBottom> Analyzing Speech Sample... </Typography>
+                                <LinearProgress style={{flexGrow:1}}/>
+                            </div>
+                        </Grid>
+                    }
+                    
                     <Grid item xs={12} container justifyContent="center" alignItems="center" justify="center">
                         <Grid item xs={12} md={6}>
                             <Typography variant="h4" style={styles} gutterBottom>
