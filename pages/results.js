@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
-import {start} from './script-1';
+import {start, parseFile} from './script-1';
 import { Typography, ButtonBase, DialogTitle, CardContent, CardHeader, Button } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -14,6 +14,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+// var fs = require('fs')
 import * as V from 'victory';
 
 const dummyData = [
@@ -36,14 +37,49 @@ class results extends Component {
     constructor() {
         super()
         this.state = {isLoading: true}
+        console.log("hi")
+        // var fs = require('fs')
     }
 
     componentDidMount() {
         start();
+        parseFile("/static/images/results/text.txt");
+    }
+
+    // parseFile = file => {
+    //     console.log("hello this is a test")
+    //     var rawFile = new XMLHttpRequest();
+    //     rawFile.open("GET", file, false);
+    //     rawFile.onreadystatechange = function ()
+    //     {
+    //         if(rawFile.readyState === 4)
+    //         {
+    //             if(rawFile.status === 200 || rawFile.status == 0)
+    //             {
+    //                 var allText = rawFile.responseText;
+    //                 alert(allText);
+    //             }
+    //         }
+    //     }
+    //     rawFile.send(null);
+    // }
+
+    readFile(file, store) { 
+        // fs.readFile('/static/images/results/text.txt', (err, data) => { 
+        // if (err) throw err; 
+        // console.log(data.toString()); 
+        // })
+    }
+
+    start() {
+        readFile("/static/images/results/notes.json", run);
+        readFile("/static/images/results/text.txt", otherRun1);
+        readFile("/static/images/results/phoneme.txt", otherRun2);
     }
 
     render() {
     const isLoading = this.state.isLoading
+    this.readFile()
     return(
         <Layout>
             <Paper elevation={"2"}>

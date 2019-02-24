@@ -8,12 +8,17 @@
     "@material-ui/icons": "^3.0.1",
     "axios": "^0.18.0",
     "express-fileupload": "^1.0.0",
+    "file-saver": "^2.0.1",
+    "file-system": "^2.2.2",
     "file-upload-react": "^0.1.2",
+    "fs": "0.0.1-security",
     "next": "^7.0.2",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-markdown": "^4.0.3",
-    "victory": "^31.1.0"
+    "recorder-js": "^1.0.7",
+    "victory": "^31.1.0",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {},
   "scripts": {

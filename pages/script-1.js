@@ -1,3 +1,6 @@
+var http = require('http');
+var fs = require('fs');
+
 function readFile(file, callback){
 	var raw_file = new XMLHttpRequest();
 	raw_file.overrideMimeType("application/json");
@@ -13,6 +16,11 @@ export function start() {
 	readFile("/static/images/results/notes.json", run);
 	readFile("/static/images/results/text.txt", otherRun1);
 	readFile("/static/images/results/phoneme.txt", otherRun2);
+	readFile("/static/images/results/phoneme.txt", otherRun2);
+}
+
+export function parseFile(file) {
+	console.log(file);
 }
 
 
@@ -24,6 +32,11 @@ function otherRun1(file) {
 
 function otherRun2(file) {
 	var body = document.querySelector(".result-3");
+	body.innerHTML = file;
+}
+
+function parse(file) {
+	var body = document.querySelector(".result-4")
 	body.innerHTML = file;
 }
 
