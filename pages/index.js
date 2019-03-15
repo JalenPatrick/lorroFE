@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Layout from '../components/Layout'
+import Fonts from '../components/Fonts'
 import Link from 'next/link'
 import { Typography, ButtonBase, DialogTitle } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
@@ -23,29 +24,39 @@ const headerStyles = {
 
 const bodyStyleDark = {
     textAlign: "center",
-    paddingTop:'10vh',
-    backgroundColor: "#e0e0e0"
+    paddingTop:'5vh',
+    paddingBottom:'5vh',
+    borderTop: '5px solid white',
+    borderBottom: '5px solid white',
+    backgroundImage: "url(/static/images/backgrounds/nelson.jpg)",
+    backgroundSize: "cover"
 }
 
 const bodyStyleLight = {
     textAlign: "center",
-    paddingTop:'10vh',
-    backgroundColor: "#fafafa"
+    paddingTop:'1vh',
+    borderTop: '5px solid white',
+    borderBottom: '5px solid white',
+    backgroundImage: "url(/static/images/backgrounds/midnight_city.jpg)",
+    backgroundSize: "cover"
 }
 
 export default () => (
     <Layout>
+        <Fonts/>
         <Paper elevation={1}>
             <Grid container spacing={24} direction="row" alignItems="center" justify="center" style={headerStyles}> 
                 <Grid item xs={12} md={7}>
-                    <Typography variant="h1" component="h3">
-                        Lorro
-                    </Typography>
-                    <Typography variant="h4">
-                        The Interactive Speech Training Suite
-                    </Typography>
+                    <div style={{}}>
+                        <Typography variant="h1" component="h1" style={{color:'white', fontFamily:'Merienda', fontSize: '10vmax'}}>
+                            Lorro
+                        </Typography>
+                        <Typography variant="h4" style={{color:'white', fontFamily:'Merienda', fontSize: '2.5vmax'}}>
+                            The Interactive Speech Training Suite
+                        </Typography>
+                    </div>
                 </Grid>
-                <Grid item xs={5} container alignItems="center" justify="center">
+                <Grid item xs={12} md={5} container alignItems="center" justify="center">
                     {/* Microphone Card */}
                     <Link href="/record">
                         <Grid item xs={12} md={7}>
@@ -91,42 +102,64 @@ export default () => (
             {/* Info */}
             <Grid container spacing={24} direction="row" alignItems="center" justify="center" style={bodyStyleDark}> 
                 <Grid item xs={12}> 
-                    <Typography variant="h2" gutterBottom>
-                        What can Lorro help you with?
+                    <Typography variant="h2" gutterBottom style={{color:'white', fontFamily:'Merienda'}}>
+                        How To Use Lorro
                     </Typography>
                 </Grid>
 
-                <Grid item xs={4}> 
-                    <Typography variant="h4" gutterBottom>
-                        Accent Mimicry
-                    </Typography>
+                <Grid item xs={12} md={4}> 
+                    <Card className="info-card" style={{marginTop:'20px', borderRadius:'15px', marginLeft:'5px'}}>
+                        <div style={{textAlign:"center", fontFamily:'Roboto', backgroundImage: "url(/static/images/backgrounds/midnight_city.jpg)", padding:'15px'}}>
+                            <Typography variant="h4" gutterBottom style={{color:'white', fontFamily:'Merienda'}}>
+                                Choose Target Sample
+                            </Typography>
+                        </div>
+                        <CardContent>
+                            <Typography variant="body1" gutterBottom style={{textAlign:"justify", padding:"20px", fontFamily:'Roboto', fontSize:'1.2vmax'}}>
+                                Your first step to sounding like your favourite celebrity or perfecting that accent is to choose your target speech sample.
+                                This is going to be the voice that you are going to attempt to emulate. You can either choose from our database of existing
+                                samples or upload your own.
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </Grid>
-                <Grid item xs={8}> 
-                    <Typography variant="body1" gutterBottom style={{textAlign:"left", padding:"10px"}}>
-                    Bacon ipsum dolor amet burgdoggen pork chop kevin alcatra jowl drumstick swine. Pork belly kielbasa t-bone, 
-                    swine leberkas pancetta corned beef picanha burgdoggen pork loin drumstick porchetta. Ball tip cow pig tri-tip, 
-                    fatback burgdoggen picanha. Strip steak venison capicola, meatloaf pork loin tail shankle cupim pastrami ball tip pig pancetta.
-                    </Typography>
+                <Grid item xs={12} md={4}>
+                    <Card className="info-card" style={{marginTop:'20px', borderRadius:'15px'}}>
+                        <div style={{textAlign:"center", fontFamily:'Roboto', backgroundImage: "url(/static/images/backgrounds/midnight_city.jpg)", padding:'15px'}}>
+                            <Typography variant="h4" gutterBottom style={{color:'white', fontFamily:'Merienda'}}>
+                                Upload Your Sample
+                            </Typography>
+                        </div>
+                        <CardContent>
+                            <Typography variant="body1" gutterBottom style={{textAlign:"justify", padding:"20px", fontFamily:'Roboto', fontSize:'1.2vmax'}}>
+                            Once you have chosen your target sample, your next step is to record yourself attempting to replicate the nuances of the sample!
+                            You either have the option to record or upload an audio sample but regardless of the method, try to ensure that your sample is audible
+                            with the presence of minimal background noise.
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </Grid>
-
-                <Grid item xs={4}> 
-                    <Typography variant="h4" gutterBottom>
-                        Speech Disfluency
-                    </Typography>
+                <Grid item xs={12} md={4}> 
+                    <Card className="info-card" style={{marginTop:'20px', borderRadius:'15px', marginRight:'5px'}}>
+                        <div style={{textAlign:"center", fontFamily:'Roboto', backgroundImage: "url(/static/images/backgrounds/midnight_city.jpg)", padding:'15px'}}>
+                            <Typography variant="h4" gutterBottom style={{color:'white', fontFamily:'Merienda'}}>
+                                View Results
+                            </Typography>
+                        </div>
+                        <CardContent>
+                            <Typography variant="body1" gutterBottom style={{textAlign:"justify", padding:"20px", fontFamily:'Roboto', fontSize:'1.2vmax'}}>
+                            Using state of the art machine learning algorithms, Lorro will compare your speech sample with your selected target sample and provide you
+                            with feedback into various aspects of your speech and guide you on how to change your pitch, pronounciation and tone to match more cloesly with
+                            your uploaded sample!
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </Grid>
-                <Grid item xs={8}> 
-                    <Typography variant="body1" gutterBottom style={{textAlign:"left", padding:"10px"}}>
-                    Bacon ipsum dolor amet burgdoggen pork chop kevin alcatra jowl drumstick swine. Pork belly kielbasa t-bone, 
-                    swine leberkas pancetta corned beef picanha burgdoggen pork loin drumstick porchetta. Ball tip cow pig tri-tip, 
-                    fatback burgdoggen picanha. Strip steak venison capicola, meatloaf pork loin tail shankle cupim pastrami ball tip pig pancetta.
-                    </Typography>
-                </Grid>
-
             </Grid>
             <Grid container spacing={24} direction="row" alignItems="center" justify="center" style={bodyStyleLight}> 
                 <Grid item xs={12}> 
-                    <Typography variant="h2" gutterBottom>
-                        How does Lorro work?
+                    <Typography variant="h5" gutterBottom style={{color:'white', fontFamily:'Segoe UI'}}>
+                        ECE496 Capstone Project by Sever Topan, Zaid Kassar and Jalen Patrick
                     </Typography>
                 </Grid>
             </Grid>

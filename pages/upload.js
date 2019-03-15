@@ -77,20 +77,93 @@ class upload extends Component {
         })
     }
 
-    handleUpload = () => {
-        console.log("is loading");
-        this.setState({loading: true});
-        const data = new FormData()
-        data.append('sample', this.state.selectedFile)
+    // Create the XHR object.
+    createCORSRequest = (method, url) => {
+    console.log('here')
+    var xhr = new XMLHttpRequest();
+    if ('withCredentials' in xhr) {
+        // XHR for Chrome/Firefox/Opera/Safari.
+        xhr.open(method, url, true);
+        xhr.responseType = 'text';
+        } else if (typeof XDomainRequest != 'undefined') {
+            // XDomainRequest for IE.
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+            xhr.responseType = 'text';
+    } else {
+        // CORS not supported.
+        xhr = null;
+    }
+    console.log('KMS', xhr)
+    // var result = JSON.parse(xhr.responseText);
+    // debugger
+    console.log('test')
+    return xhr;
+    }
 
-        //send data to endpoint via axios
-        axios.post("http://localhost:8080/voicecompare", data)
-            .then(res => {
-                console.log(res.statusText);
-                console.log(res);
-            }).then(() => {
-                document.location.href = "/results"
-            })
+    // Make the actual CORS request.
+    makeCorsRequest = async () => {
+    // This is a sample server that supports CORS.
+    let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
+    var xhr = this.createCORSRequest('GET', upload_url);
+    if (!xhr) {
+        console.log('Error: unable to make CORS request.');
+        return;
+    }
+    // Response handlers.
+    xhr.onload = function() {
+        var result = JSON.parse(xhr.responseText);
+        debugger
+        console.log(result)
+    };
+    xhr.onerror = function() {
+        console.log('Error: there was an error making the request.');
+    };
+    xhr.send();
+    }
+
+
+    getUrl = async () => {
+        const data = this.state.selectedFile
+//        data.append('sample', this.state.selectedFile)
+        let res
+        let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
+        await axios.get(upload_url, {headers: {"Access-Control-Allow-Headers": "*"}}).then(response => {
+            console.log(response)
+            res = response.data
+        });
+        console.log('res', res)
+
+        await axios.put(res, data).then(response => {
+            console.log(response)
+        })
+    }
+
+    handleUpload = async () => {
+        const data = this.state.selectedFile
+        //data.append('sample', this.state.selectedFile)
+
+        console.log(data)
+
+        let res
+        let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
+        let process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
+        await axios.get(upload_url, {headers: {"Access-Control-Allow-Headers": "*"}}).then(response => {
+            console.log(response)
+            res = response.data
+        });
+        console.log('res', res)
+
+        const file_name = res.split('/')[3].split('?')[0]
+        console.log(file_name)
+
+        await axios.put(res, data).then(response => {
+            console.log(response)
+        })
+
+        await axios.post(process_url, file_name).then(response => {
+            console.log(response)
+        })
     }
 
     handleselectedFile = event => {
@@ -218,8 +291,17 @@ class upload extends Component {
                                 variant="contained"
                                 color="secondary"
                                 containerElement='label'
+                                onClick={this.makeCorsRequest}
                                 >
-                            Choose a file
+                            Test
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                containerElement='label'
+                                onClick={this.getUrl}
+                                >
+                            Test2
                             </Button> */}
                             <input type="file" accept=".wav" name="file" id="file" class="inputfile" onChange={this.handleselectedFile} style={buttonStyle}/>
                             <label for="file" style={labelStyle}> Choose An Audio File</label>

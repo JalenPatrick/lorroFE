@@ -32,6 +32,7 @@ const buttonGroup = {
 const buttonStyle = {
     marginLeft: "20px",
     marginRight: "20px",
+    minWidth: "22vmin"
 }
 
 const submitButton = {
@@ -43,8 +44,8 @@ const submitButton = {
 // audio stuff
 let isRecording = false;
 let blob = null;
-let stream, audioContext, audioCtx, mediaRecorder, audioURL;
-let chunks = [];
+let audioContext, audioURL;
+let recorder;
 
 
 class record extends Component {
@@ -55,6 +56,7 @@ class record extends Component {
             appIsMounted: false,
             recording: false,
             completedRecording: false,
+            uploadData: null
         };
     }
 
@@ -64,8 +66,12 @@ class record extends Component {
         });
 
         const constraints = {audio: true};
-        navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-            mediaRecorder = new MediaRecorder(stream)
+        const cons = { audio: true }
+        navigator.mediaDevices.getUserMedia(cons).then(stream => {
+            audioContext =  new (window.AudioContext || window.webkitAudioContext)();
+            recorder = new Recorder(audioContext)
+            recorder.init(stream)
+            console.log(recorder)
         })
     }
 
@@ -74,21 +80,23 @@ class record extends Component {
         blob = null;
         audioURL = null;
         this.setState({recording:true});
-        audioContext =  new (window.AudioContext || window.webkitAudioContext)();
-        mediaRecorder.start();
+        recorder.start();
     }
 
-    recordStop = () => {
-        mediaRecorder.stop();
+    recordStop = async () => {
+        await recorder.stop().then(({blob, buffer}) => {
+            blob = blob;
+            audioURL = window.URL.createObjectURL(blob);
+            this.setState({uploadData: blob})
+        })
 
         this.setState({completedRecording: true})
         this.setState({recording:false});
+    }
 
-        mediaRecorder.ondataavailable = function(e) {
-            chunks.push(e.data);
-            blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-            audioURL = window.URL.createObjectURL(blob);
-        }
+    createDownloadLink = () => {
+        const fileName = new Date().toISOString();
+        console.log(fileName)
     }
 
     recordPlay = () => {
@@ -96,19 +104,34 @@ class record extends Component {
         a.play();
     }
 
-    submitRecording = () => {
-        alert('sending the recording to the server')
-        const data = new FormData()
-        data.append('sample', this.state.selectedFile)
+    downloadRecording = () => {
+        // this saves a local copy of the audio
+        saveAs(audioURL, "lorro_record.wav");
+    }
 
-        //send data to endpoint via axios
-        axios.post("http://localhost:8080/voicecompare", data)
-            .then(res => {
-                console.log(res.statusText);
-                console.log(res);
-            }).then(() => {
-                document.location.href = "/results"
-            })
+    // uploads the audio recording to the AWS server via the following 3 step process
+    submitRecording = async () => {
+        const data = this.state.uploadData
+
+        let res
+        let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
+        let process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
+        await axios.get(upload_url, {headers: {"Access-Control-Allow-Headers": "*"}}).then(response => {
+            console.log(response)
+            res = response.data
+        });
+        console.log('res', res)
+
+        const file_name = res.split('/')[3].split('?')[0]
+        console.log(file_name)
+
+        await axios.put(res, data).then(response => {
+            console.log(response)
+        })
+
+        await axios.post(process_url, file_name).then(response => {
+            console.log(response)
+        })
     }
 
     render() {
@@ -149,6 +172,13 @@ class record extends Component {
                                         onClick={this.recordPlay}
                                         disabled={!this.state.completedRecording}> 
                                     Play Recording </Button>
+                                    <Button
+                                        style={buttonStyle}
+                                        variant='contained'
+                                        color='secondary'
+                                        onClick={this.downloadRecording}
+                                        disabled={!this.state.completedRecording}> 
+                                    Download </Button>
                                 </Grid>
                                 <Grid style={buttonGroup} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center">
                                     <div>

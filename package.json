@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^3.4.0",
     "@material-ui/icons": "^3.0.1",
+    "audio-resampler": "^1.0.1",
     "axios": "^0.18.0",
     "express-fileupload": "^1.0.0",
     "file-saver": "^2.0.1",
