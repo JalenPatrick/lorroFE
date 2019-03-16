@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Layout from '../components/Layout'
+import Fonts from '../components/Fonts'
 import { Typography, ButtonBase, DialogTitle } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -28,6 +29,11 @@ const group = {
 
 const buttonGroup = {
     height: "10vh",
+    textAlign: "center"
+}
+
+const result = {
+    height: "auto",
     textAlign: "center"
 }
 
@@ -58,7 +64,10 @@ class record extends Component {
             appIsMounted: false,
             recording: false,
             completedRecording: false,
-            uploadData: null
+            uploadData: null,
+            loading: false,
+            submitted: false,
+            submitText: 'Submit Recording'
         };
     }
 
@@ -128,6 +137,7 @@ class record extends Component {
             console.log(response)
             res = response.data
             console.log('get success')
+            this.setState({submitText:'Uploading sample....'})
         });
 
         console.log('res', res)
@@ -138,29 +148,68 @@ class record extends Component {
         await axios.put(res, data).then(response => {
             console.log(response)
             console.log('put success')
+            this.setState({loading:true})
         })
 
+        let phonemes = []
         await axios.post(process_url, file_name).then(response => {
             console.log(response)
+            phonemes = response.data.segmented_phonemes
             console.log('post success')
+            this.setState({submitted:true, submitText:'Submitted!'})
         })
+
+        console.log('phonemes', phonemes)
+        let cleanPhonemes = []
+        let prevInsert = null
+
+        phonemes.forEach((pho) => {
+            if(pho != '2' && pho != prevInsert) {
+                cleanPhonemes.push(pho);
+                prevInsert = pho;
+                // console.log(pho)
+            }
+        })
+
+        console.log(cleanPhonemes)
+
+
+        // phonemes.forEach(phoneme => {
+        //     if (phoneme != '2') {
+        //         cleanPhonemes.push(phoneme)
+        //     }
+        // })
+
+        // console.log(cleanPhonemes)
+        
     }
 
     render() {
         if (this.state.appIsMounted) {
             return (
                 <div>
+                    <Fonts/>
                     <Layout>
                         <Paper elevation={"1"}>
                             <Grid container spacing={24}>
                                 {/* title and subtitle */}
                                 <Grid item xs={12} style={group}>
-                                    <Typography variant="h1" component="h3">
+                                    <Typography variant="h1" component="h3" style={{fontFamily:'Roboto'}}>
                                         Record
                                     </Typography>
                                     <Typography variant="h5">
                                         Click the record button and record an attempt to match your selected speech sample.
                                     </Typography>
+                                </Grid>
+                                <Grid item xs={8} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
+                                    <Card className="record-card" style={{padding:10, marginBottom:'5vh', borderBottom:'3px solid #3f51b5'}}>
+                                        <CardContent>
+                                            <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Please say the following sentence: </Typography>
+                                            <Typography variant="h5" style={{textDecoration:'none', fontFamily:'Lato'}}>
+                                                She had your dark suit in greasy wash water all year
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
                                 </Grid>
                                 {/* start/stop buttons */}
                                 <Grid style={buttonGroup} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
@@ -200,9 +249,18 @@ class record extends Component {
                                             color='primary'
                                             onClick={this.submitRecording}
                                             disabled={!this.state.completedRecording}> 
-                                        Submit Recording </Button>
+                                        {this.state.submitText} </Button>
                                     </div>
                                 </Grid>
+                                {this.state.submitted && <Grid style={result} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center">
+                                    <Card className="record-card" style={{padding:5, marginBottom:'5vh', marginTop:'5vh', borderBottom:'3px solid #43A047'}}>
+                                        <CardContent>
+                                            <Typography variant="h5" style={{textDecoration:'none', fontFamily:'Lato'}}>
+                                                Successfully submitted your speech sample!
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>}
                             </Grid>
                         </Paper>
                     </Layout>
