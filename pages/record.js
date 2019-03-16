@@ -18,6 +18,8 @@ import Recorder from 'recorder-js';
 import { recording } from '../scripts/record-script';
 import { saveAs } from 'file-saver';
 
+var cors = require('cors')
+
 
 const group = {
     height: "30vh",
@@ -116,15 +118,18 @@ class record extends Component {
         let res
         let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
         let process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
-        // await axios.get(upload_url, {headers: {"Access-Control-Allow-Headers": "*"}}).then(response => {
-        //     console.log(response)
-        //     res = response.data
-        // });
-
-        await axios.get(upload_url).then(response => {
+        
+        const cors_headers = {
+            // "Access-Control-Allow-Origin": "*",
+            // "content-type":"application/json",
+        }
+        
+        await axios.get(upload_url, {headers: cors_headers}).then(response => {
             console.log(response)
             res = response.data
+            console.log('get success')
         });
+
         console.log('res', res)
 
         const file_name = res.split('/')[3].split('?')[0]
@@ -132,10 +137,12 @@ class record extends Component {
 
         await axios.put(res, data).then(response => {
             console.log(response)
+            console.log('put success')
         })
 
         await axios.post(process_url, file_name).then(response => {
             console.log(response)
+            console.log('post success')
         })
     }
 
