@@ -116,7 +116,12 @@ class record extends Component {
         let res
         let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
         let process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
-        await axios.get(upload_url, {headers: {"Access-Control-Allow-Headers": "*"}}).then(response => {
+        // await axios.get(upload_url, {headers: {"Access-Control-Allow-Headers": "*"}}).then(response => {
+        //     console.log(response)
+        //     res = response.data
+        // });
+
+        await axios.get(upload_url).then(response => {
             console.log(response)
             res = response.data
         });
