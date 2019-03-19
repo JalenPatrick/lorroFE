@@ -78,7 +78,7 @@ export default () => (
                         </Grid>
                     </Link>
                     {/* Upload Card */}
-                    <Link href="/upload">
+                    {/* <Link href="/upload">
                         <Grid item xs={12} md={7}>
                             <Card className="record-card" style={{marginTop:'20px'}}>
                                 <CardActionArea>
@@ -96,7 +96,7 @@ export default () => (
                                 </CardActionArea>
                             </Card>
                         </Grid>
-                    </Link>
+                    </Link> */}
                 </Grid>
             </Grid>
             {/* Info */}

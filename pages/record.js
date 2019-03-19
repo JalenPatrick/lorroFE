@@ -14,9 +14,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import axios from 'axios'
-
 import Recorder from 'recorder-js';
 import { recording } from '../scripts/record-script';
 import { saveAs } from 'file-saver';
@@ -53,6 +53,13 @@ const submitButton = {
     marginLeft: "20px",
     marginRight: "20px",
     width: "50vw"
+}
+
+const loadingStyle = {
+    textAlign: "center",
+    marginTop:'-10',
+    backgroundColor: "#e0e0e0",
+    height: '100vh'
 }
 
 // audio stuff
@@ -130,7 +137,7 @@ class record extends Component {
     // uploads the audio recording to the AWS server via the following 3 step process
     submitRecording = async () => {
         const data = this.state.uploadData
-
+        this.setState({submitted:true});
         let res
         let upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload"
         let process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
@@ -196,6 +203,7 @@ class record extends Component {
                     <Fonts/>
                     <Layout>
                         <Paper elevation={"1"}>
+                        {!this.state.submitted ? (
                             <Grid container spacing={24}>
                                 {/* title and subtitle */}
                                 <Grid item xs={12} style={group}>
@@ -267,6 +275,15 @@ class record extends Component {
                                     </Card>
                                 </Grid>}
                             </Grid>
+                        ) : (
+                            <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
+                                <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
+                                    {/* https://s3.us-east-2.amazonaws.com/lorro/5f52814c-4865-11e9-8577-eb571fcec879.wav */}
+                                    <Typography variant="h2" gutterBottom style={{color:'black', fontFamily:'Merienda', fontSize: '7vmax'}}> Submitting Your Speech Sample... </Typography>
+                                    <LinearProgress style={{flexGrow:1}}/> 
+                                </Grid>
+                            </Grid> 
+                        )} 
                         </Paper>
                     </Layout>
                 </div>

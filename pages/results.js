@@ -15,7 +15,22 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-// import LinearProgress from '@material-ui/core/LinearProgress';
+import Fonts from '../components/Fonts'
+import { 
+    AreaChart,
+    Area,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    Label,
+    Radar,
+    RadarChart,
+    PolarGrid,
+    PolarAngleAxis,
+    PolarRadiusAxis
+} from 'recharts';
 
 // var fs = require('fs')
 import * as V from 'victory';
@@ -29,7 +44,8 @@ const yourCard = {
 
 const sampleCard = {
     borderTop: "5px solid #ec407a",
-    borderRadius: "5px"
+    borderRadius: "5px",
+    margin: "5vh 0 5vh 0",
 }
 
 const loadingStyle = {
@@ -46,6 +62,11 @@ const displayStyle = {
     height: 'auto'
 }
 
+const wrap = {
+    overflowWrap: "break-word",
+    wordWrap: "break-word"
+}
+
 class results extends Component {
     constructor() {
         super()
@@ -53,21 +74,25 @@ class results extends Component {
             isLoading: true,
             rawPhonemes: null,
             segmentedPhonemes: null,
-            noteProgression: null
+            noteProgression: null,
+            frequencies: null
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({isLoading: true})
         // console.log(this.props)
         // console.log(window.location.search)
         const process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
+        const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
         // get file name from query param
         const fileName = window.location.search.split('=')[1]
         console.log(fileName)
+
+        let transcribe
         
         // get info from backend and take what we need
-        axios.post(process_url, fileName).then(response => {
+        await axios.post(process_url, fileName).then(response => {
             console.log(response)
             console.log('post success')
             const data = response.data
@@ -78,21 +103,98 @@ class results extends Component {
                 isLoading: false,
                 rawPhonemes: data.segmented_phonemes,
                 segmentedPhonemes: data.backend_decoded,
-                noteProgression: data.note_progression
+                noteProgression: data.note_progression,
+                frequencies: data.fundamental_frequencies
+            })
+        })
+
+        await axios.post(process_url, fileName).then(response => {
+            console.log(response)
+            console.log('post success')
+            const data = response.data
+
+            const sampleLength = data.segmented_phonemes
+
+            this.setState({
+                
             })
         })
     }
 
+    getFreqData = (freqArray, phonemeArray, notesArray) => {
+        console.log(freqArray)
+        console.log(phonemeArray)
+        let dataArray = []
+
+        if (freqArray)
+            for (let i = 0; i < freqArray.length; i++) {
+                let dataObject = {
+                    freq: Math.round(freqArray[i]),
+                    phoneme: phonemeArray[i],
+                    note: notesArray[i]
+                }
+                dataArray.push(dataObject)
+            }
+        console.log(dataArray)
+        return dataArray
+    }
+
+    // used to contruct the radial plot which displays the users accuracy to the target sample
+    // based on 3 main fields
+    // 1. Pitch --> average spoken word frequency over the sample
+    // 2. Word Accuracy --> how correct the words are (use confidence from AWS)
+    // 3. Timing --> raw duration of the samples
+    getCompareData = (freqArray, wordArray) => {
+        let avgFreq, totalSum, totalFreqs, speakingTime;
+        
+        if (freqArray) {
+            for (let i = 0; i < freqArray.length; i++) {
+                if (freqArray[i] != 0) {
+                    totalSum += freqArray[i];
+                    totalFreqs += 1;
+                }
+            }
+        }
+        
+
+        speakingTime = totalFreqs * 0.02;
+        avgFreq = totalSum/totalFreqs;
+
+        const pitchObject = {
+            category: "Pitch Matching",
+            value: 65,
+            fullMark: 100 
+        }
+
+        const wordAccuracyObject = {
+            category: "Word Matching",
+            value: 90,
+            fullMark: 100 
+        }
+        
+        const timingObject = {
+            category: "Timing Matching",
+            value: 30,
+            fullMark: 100 
+        }
+
+        const dataArray = [pitchObject, wordAccuracyObject, timingObject]
+        return dataArray;
+    }
+
     render() {
     const isLoading = this.state.isLoading
+    const freqGraphData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
+    const compareGraphData = this.getCompareData(this.state.frequencies, [])
     return(
         <Layout>
+        <Fonts/>
             {isLoading ? (
                 <Paper elevation={"1"}>
                     <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
                         <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
                             {/* https://s3.us-east-2.amazonaws.com/lorro/5f52814c-4865-11e9-8577-eb571fcec879.wav */}
-                            <Typography variant="h2" gutterBottom> Analyzing Your Speech Sample... </Typography>
+                            <Typography variant="h2" gutterBottom style={{color:'black', fontFamily:'Merienda', fontSize: '7vmax'}}> Analyzing Your Speech Sample... </Typography>
                             <LinearProgress style={{flexGrow:1}}/> 
                         </Grid>
                     </Grid>
@@ -103,16 +205,73 @@ class results extends Component {
                         <Grid container spacing={24} style={displayStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
                             {/* Summary card */}
                             <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
-                                <Card>
+                                <Card style={sampleCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Results Summary </Typography>
-                                        <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
-                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography>
+                                        {/* <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
+                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography> */}
+                                        <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
+                                        <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
+                                        <ResponsiveContainer width='100%' aspect={4.0/2.0}>
+                                        <AreaChart data={freqGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="phoneme" hide={true}>
+                                                <Label value="Detected Phoneme" offset={10} position="bottom" />
+                                            </XAxis>
+                                            <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
+                                            <Tooltip />
+                                            <Area type="monotone" dataKey="freq" stroke="#8884d8" fill="#8884d8" unit="hz" activeDot={{ r: 8 }} />
+                                            <Area type="monotone" dataKey="note" stroke="#8884d8" dot={false} />
+                                        </AreaChart>
+                                        </ResponsiveContainer>
+                                    </CardContent>
+                                </Card>
+                                
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h2" gutterBottom> Comparision to Sample </Typography>
+                                        <ResponsiveContainer width='100%' aspect={4.0/2.0}>
+                                        <RadarChart data={compareGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                            <PolarGrid />
+                                            <PolarAngleAxis dataKey="category" />
+                                            <PolarRadiusAxis />
+                                            <Tooltip />
+                                            <Radar name='accuracy' unit='%' dataKey='value' stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                                        </RadarChart>
+                                        </ResponsiveContainer>
+                                    </CardContent>
+                                </Card>
+
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h2" gutterBottom> View Raw Data </Typography>
+                                        <ExpansionPanel>
+                                            <ExpansionPanelSummary>
+                                                <Typography variant="body" gutterBottom style={{textAlign: "center"}}> Click to open </Typography>
+                                            </ExpansionPanelSummary>
+                                            <ExpansionPanelDetails>
+                                                <Grid container spacing={24} direction="row" justifyContent="center" alignItems="center" justify="center">
+                                                    {/* Summary card */}
+                                                    <Grid item xs={12} md={12} style={{margin:"0 15px 0 5px", width:'100%'}}>
+                                                        <Typography variant="h5" gutterBottom> Phonemes </Typography>
+                                                        <Typography style={wrap} variant="body"> {this.state.segmentedPhonemes} </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} md={12} style={{margin:"0 15px 0 5px", width:'100%'}}>
+                                                        <Typography variant="h5" gutterBottom> Note Progression </Typography>
+                                                        <Typography style={wrap} variant="body"> {this.state.noteProgression} </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} md={12} style={{margin:"0 15px 0 5px", width:'100%'}}>
+                                                        <Typography variant="h5" gutterBottom> Fundamental Frequencies </Typography>
+                                                        <Typography style={wrap} variant="body"> {this.state.frequencies} </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </ExpansionPanelDetails>
+                                        </ExpansionPanel>
                                     </CardContent>
                                 </Card>
                             </Grid>
                             {/* words comparison */}
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
                                 <Card style={yourCard}>
                                     <CardContent>
                                         <Typography variant="h4"> Words you </Typography>
@@ -127,10 +286,10 @@ class results extends Component {
                                         content goes here
                                     </CardContent>
                                 </Card>
-                            </Grid>
+                            </Grid> */}
 
                             {/* phoneme comparison */}
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
                                 <Card style={yourCard}>
                                     <CardContent>
                                         <Typography variant="h4"> Phonemes you </Typography>
@@ -145,10 +304,10 @@ class results extends Component {
                                         content goes here
                                     </CardContent>
                                 </Card>
-                            </Grid>
+                            </Grid> */}
 
                             {/* pitch comparison */}
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
                                 <Card style={yourCard}>
                                     <CardContent>
                                         <Typography variant="h4"> Pitch you </Typography>
@@ -163,10 +322,10 @@ class results extends Component {
                                         content goes here
                                     </CardContent>
                                 </Card>
-                            </Grid>
+                            </Grid> */}
 
                             {/* pacing comparison */}
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
                                 <Card style={yourCard}>
                                     <CardContent>
                                         <Typography variant="h4"> Pacing you </Typography>
@@ -181,7 +340,7 @@ class results extends Component {
                                         content goes here
                                     </CardContent>
                                 </Card>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Grid>
                 </Paper>

@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Fonts from '../components/Fonts'
 
 
 const styles = {
@@ -14,10 +15,11 @@ const styles = {
 
 const Header = () => (
     <div>
+        <Fonts/>
         <AppBar position="static" color="primary">
             <Toolbar>
                 <Link href="/">
-                    <Typography variant="h5" color="inherit" gutterBottom>
+                    <Typography variant="h5" color="inherit" gutterBottom style={{fontFamily:'Merienda'}}>
                         Lorro
                     </Typography>
                 </Link>

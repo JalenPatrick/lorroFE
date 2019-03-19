@@ -196,7 +196,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_Toolbar__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Toolbar__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/Typography */ "@material-ui/core/Typography");
 /* harmony import */ var _material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _components_Fonts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/Fonts */ "./components/Fonts.js");
 var _jsxFileName = "/Users/jalen/School/Capstone/Lorro_FE/components/Header.js";
+
 
 
 
@@ -213,37 +215,46 @@ var Header = function Header() {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 16
+      lineNumber: 17
     },
     __self: this
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_AppBar__WEBPACK_IMPORTED_MODULE_5___default.a, {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 18
+    },
+    __self: this
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_AppBar__WEBPACK_IMPORTED_MODULE_5___default.a, {
     position: "static",
     color: "primary",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 17
+      lineNumber: 19
     },
     __self: this
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Toolbar__WEBPACK_IMPORTED_MODULE_6___default.a, {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 18
+      lineNumber: 20
     },
     __self: this
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
     href: "/",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 19
+      lineNumber: 21
     },
     __self: this
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_7___default.a, {
     variant: "h5",
     color: "inherit",
     gutterBottom: true,
+    style: {
+      fontFamily: 'Merienda'
+    },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 20
+      lineNumber: 22
     },
     __self: this
   }, "Lorro")))));
@@ -357,15 +368,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_14__);
 /* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @material-ui/core/Button */ "@material-ui/core/Button");
 /* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! axios */ "axios");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! recorder-js */ "recorder-js");
-/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(recorder_js__WEBPACK_IMPORTED_MODULE_17__);
-/* harmony import */ var _scripts_record_script__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../scripts/record-script */ "./scripts/record-script.js");
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! file-saver */ "file-saver");
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_19__);
-/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! history */ "history");
-/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(history__WEBPACK_IMPORTED_MODULE_20__);
+/* harmony import */ var _material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @material-ui/core/LinearProgress */ "@material-ui/core/LinearProgress");
+/* harmony import */ var _material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! recorder-js */ "recorder-js");
+/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(recorder_js__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var _scripts_record_script__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../scripts/record-script */ "./scripts/record-script.js");
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! file-saver */ "file-saver");
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_20__);
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! history */ "history");
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(history__WEBPACK_IMPORTED_MODULE_21__);
 
 var _jsxFileName = "/Users/jalen/School/Capstone/Lorro_FE/pages/record.js";
 
@@ -415,6 +428,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 var cors = __webpack_require__(/*! cors */ "cors");
 
 var group = {
@@ -437,7 +451,13 @@ var buttonStyle = {
 var submitButton = {
   marginLeft: "20px",
   marginRight: "20px",
-  width: "50vw" // audio stuff
+  width: "50vw"
+};
+var loadingStyle = {
+  textAlign: "center",
+  marginTop: '-10',
+  backgroundColor: "#e0e0e0",
+  height: '100vh' // audio stuff
 
 };
 var isRecording = false;
@@ -519,7 +539,7 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "downloadRecording", function () {
       // this saves a local copy of the audio
-      Object(file_saver__WEBPACK_IMPORTED_MODULE_19__["saveAs"])(audioURL, "lorro_record.wav");
+      Object(file_saver__WEBPACK_IMPORTED_MODULE_20__["saveAs"])(audioURL, "lorro_record.wav");
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "submitRecording",
@@ -533,13 +553,18 @@ function (_Component) {
           switch (_context2.prev = _context2.next) {
             case 0:
               data = _this.state.uploadData;
+
+              _this.setState({
+                submitted: true
+              });
+
               upload_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/upload";
               process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process";
               cors_headers = {// "Access-Control-Allow-Origin": "*",
                 // "content-type":"application/json",
               };
-              _context2.next = 6;
-              return axios__WEBPACK_IMPORTED_MODULE_16___default.a.get(upload_url, {
+              _context2.next = 7;
+              return axios__WEBPACK_IMPORTED_MODULE_17___default.a.get(upload_url, {
                 headers: cors_headers
               }).then(function (response) {
                 console.log(response);
@@ -551,7 +576,7 @@ function (_Component) {
                 });
               });
 
-            case 6:
+            case 7:
               console.log('res', res);
               file_name = res.split('/')[3].split('?')[0];
               console.log(file_name);
@@ -560,8 +585,8 @@ function (_Component) {
                 fileName: file_name
               });
 
-              _context2.next = 12;
-              return axios__WEBPACK_IMPORTED_MODULE_16___default.a.put(res, data).then(function (response) {
+              _context2.next = 13;
+              return axios__WEBPACK_IMPORTED_MODULE_17___default.a.put(res, data).then(function (response) {
                 console.log(response);
                 console.log('put success');
 
@@ -570,7 +595,7 @@ function (_Component) {
                 });
               });
 
-            case 12:
+            case 13:
               // route to the results page
               next_router__WEBPACK_IMPORTED_MODULE_2___default.a.push({
                 pathname: '/results',
@@ -596,7 +621,7 @@ function (_Component) {
               // })
               // console.log(cleanPhonemes)
 
-            case 13:
+            case 14:
             case "end":
               return _context2.stop();
           }
@@ -635,7 +660,7 @@ function (_Component) {
       };
       navigator.mediaDevices.getUserMedia(cons).then(function (stream) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        recorder = new recorder_js__WEBPACK_IMPORTED_MODULE_17___default.a(audioContext);
+        recorder = new recorder_js__WEBPACK_IMPORTED_MODULE_18___default.a(audioContext);
         recorder.init(stream);
         console.log(recorder);
       });
@@ -651,34 +676,34 @@ function (_Component) {
         return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 195
+            lineNumber: 202
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_8__["default"], {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 196
+            lineNumber: 203
           },
           __self: this
         }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Layout__WEBPACK_IMPORTED_MODULE_7__["default"], {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 197
+            lineNumber: 204
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_5___default.a, {
           elevation: "1",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 198
+            lineNumber: 205
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
+        }, !this.state.submitted ? react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
           container: true,
           spacing: 24,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 199
+            lineNumber: 207
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
@@ -687,7 +712,7 @@ function (_Component) {
           style: group,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 201
+            lineNumber: 209
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
@@ -698,14 +723,14 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 202
+            lineNumber: 210
           },
           __self: this
         }, "Record"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
           variant: "h5",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 205
+            lineNumber: 213
           },
           __self: this
         }, "Click the record button and record an attempt to match your selected speech sample.")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, (_React$createElement = {
@@ -714,7 +739,7 @@ function (_Component) {
           container: true
         }, _defineProperty(_React$createElement, "xs", 12), _defineProperty(_React$createElement, "direction", "row"), _defineProperty(_React$createElement, "justifyContent", "center"), _defineProperty(_React$createElement, "alignItems", "center"), _defineProperty(_React$createElement, "justify", "center"), _defineProperty(_React$createElement, "alignContent", "space-between"), _defineProperty(_React$createElement, "__source", {
           fileName: _jsxFileName,
-          lineNumber: 209
+          lineNumber: 217
         }), _defineProperty(_React$createElement, "__self", this), _React$createElement), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10___default.a, {
           className: "record-card",
           style: {
@@ -724,13 +749,13 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 210
+            lineNumber: 218
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13___default.a, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 211
+            lineNumber: 219
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
@@ -742,7 +767,7 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 212
+            lineNumber: 220
           },
           __self: this
         }, " Please say the following sentence: "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
@@ -753,7 +778,7 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 213
+            lineNumber: 221
           },
           __self: this
         }, "She had your dark suit in greasy wash water all year")))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
@@ -767,7 +792,7 @@ function (_Component) {
           alignContent: "space-between",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 220
+            lineNumber: 228
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
@@ -777,7 +802,7 @@ function (_Component) {
           onClick: this.recordStart,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 221
+            lineNumber: 229
           },
           __self: this
         }, "Record Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
@@ -788,7 +813,7 @@ function (_Component) {
           disabled: !this.state.recording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 227
+            lineNumber: 235
           },
           __self: this
         }, "Stop Recording "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
@@ -799,7 +824,7 @@ function (_Component) {
           disabled: !this.state.completedRecording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 234
+            lineNumber: 242
           },
           __self: this
         }, "Play Recording "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
@@ -810,7 +835,7 @@ function (_Component) {
           disabled: !this.state.completedRecording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 241
+            lineNumber: 249
           },
           __self: this
         }, "Download ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
@@ -823,13 +848,13 @@ function (_Component) {
           justify: "center",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 249
+            lineNumber: 257
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 250
+            lineNumber: 258
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
@@ -840,7 +865,7 @@ function (_Component) {
           disabled: !this.state.completedRecording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 251
+            lineNumber: 259
           },
           __self: this
         }, this.state.submitText, " "))), this.state.submitted && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
@@ -853,7 +878,7 @@ function (_Component) {
           justify: "center",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 260
+            lineNumber: 268
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10___default.a, {
@@ -866,13 +891,13 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 261
+            lineNumber: 269
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13___default.a, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 262
+            lineNumber: 270
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
@@ -883,10 +908,57 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 263
+            lineNumber: 271
           },
           __self: this
-        }, "Successfully submitted your speech sample!"))))))));
+        }, "Successfully submitted your speech sample!"))))) : react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
+          container: true,
+          spacing: 24,
+          style: loadingStyle,
+          direction: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          justify: "center",
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 279
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
+          item: true,
+          xs: 12,
+          md: 12,
+          style: {
+            padding: "0 30px 0 30px"
+          },
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 280
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
+          variant: "h2",
+          gutterBottom: true,
+          style: {
+            color: 'black',
+            fontFamily: 'Merienda',
+            fontSize: '7vmax'
+          },
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 282
+          },
+          __self: this
+        }, " Submitting Your Speech Sample... "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_16___default.a, {
+          style: {
+            flexGrow: 1
+          },
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 283
+          },
+          __self: this
+        }))))));
       } else {
         return false;
       }
@@ -1144,6 +1216,17 @@ module.exports = require("@material-ui/core/CssBaseline");
 /***/ (function(module, exports) {
 
 module.exports = require("@material-ui/core/Grid");
+
+/***/ }),
+
+/***/ "@material-ui/core/LinearProgress":
+/*!***************************************************!*\
+  !*** external "@material-ui/core/LinearProgress" ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@material-ui/core/LinearProgress");
 
 /***/ }),
 

@@ -20,6 +20,7 @@
     "react-dom": "^16.6.1",
     "react-markdown": "^4.0.3",
     "react-router": "^5.0.0",
+    "recharts": "^1.5.0",
     "recorder-js": "^1.0.7",
     "victory": "^31.1.0",
     "xmlhttprequest": "^1.8.0"
