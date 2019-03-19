@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -331,37 +331,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "prop-types");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
-/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/core/Paper */ "@material-ui/core/Paper");
-/* harmony import */ var _material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/Grid */ "@material-ui/core/Grid");
-/* harmony import */ var _material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Layout */ "./components/Layout.js");
-/* harmony import */ var _components_Fonts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Fonts */ "./components/Fonts.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _material_ui_core_Card__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/core/Card */ "@material-ui/core/Card");
-/* harmony import */ var _material_ui_core_Card__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _material_ui_core_CardActionArea__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core/CardActionArea */ "@material-ui/core/CardActionArea");
-/* harmony import */ var _material_ui_core_CardActionArea__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardActionArea__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/core/CardActions */ "@material-ui/core/CardActions");
-/* harmony import */ var _material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/core/CardContent */ "@material-ui/core/CardContent");
-/* harmony import */ var _material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/core/CardMedia */ "@material-ui/core/CardMedia");
-/* harmony import */ var _material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @material-ui/core/Button */ "@material-ui/core/Button");
-/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! axios */ "axios");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! recorder-js */ "recorder-js");
-/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(recorder_js__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var _scripts_record_script__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../scripts/record-script */ "./scripts/record-script.js");
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! file-saver */ "file-saver");
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "prop-types");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/Paper */ "@material-ui/core/Paper");
+/* harmony import */ var _material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/Grid */ "@material-ui/core/Grid");
+/* harmony import */ var _material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Layout */ "./components/Layout.js");
+/* harmony import */ var _components_Fonts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/Fonts */ "./components/Fonts.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core/Card */ "@material-ui/core/Card");
+/* harmony import */ var _material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _material_ui_core_CardActionArea__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/core/CardActionArea */ "@material-ui/core/CardActionArea");
+/* harmony import */ var _material_ui_core_CardActionArea__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardActionArea__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/core/CardActions */ "@material-ui/core/CardActions");
+/* harmony import */ var _material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardActions__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/core/CardContent */ "@material-ui/core/CardContent");
+/* harmony import */ var _material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @material-ui/core/CardMedia */ "@material-ui/core/CardMedia");
+/* harmony import */ var _material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @material-ui/core/Button */ "@material-ui/core/Button");
+/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! recorder-js */ "recorder-js");
+/* harmony import */ var recorder_js__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(recorder_js__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _scripts_record_script__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../scripts/record-script */ "./scripts/record-script.js");
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! file-saver */ "file-saver");
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_19__);
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! history */ "history");
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(history__WEBPACK_IMPORTED_MODULE_20__);
 
 var _jsxFileName = "/Users/jalen/School/Capstone/Lorro_FE/pages/record.js";
 
@@ -388,6 +392,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+ // import { Router, Route, Switch } from "react-router";
 
 
 
@@ -512,7 +519,7 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "downloadRecording", function () {
       // this saves a local copy of the audio
-      Object(file_saver__WEBPACK_IMPORTED_MODULE_18__["saveAs"])(audioURL, "lorro_record.wav");
+      Object(file_saver__WEBPACK_IMPORTED_MODULE_19__["saveAs"])(audioURL, "lorro_record.wav");
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "submitRecording",
@@ -520,7 +527,7 @@ function (_Component) {
     _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-      var data, res, upload_url, process_url, cors_headers, file_name, phonemes, cleanPhonemes, prevInsert;
+      var data, res, upload_url, process_url, cors_headers, file_name;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -532,7 +539,7 @@ function (_Component) {
                 // "content-type":"application/json",
               };
               _context2.next = 6;
-              return axios__WEBPACK_IMPORTED_MODULE_15___default.a.get(upload_url, {
+              return axios__WEBPACK_IMPORTED_MODULE_16___default.a.get(upload_url, {
                 headers: cors_headers
               }).then(function (response) {
                 console.log(response);
@@ -548,8 +555,13 @@ function (_Component) {
               console.log('res', res);
               file_name = res.split('/')[3].split('?')[0];
               console.log(file_name);
-              _context2.next = 11;
-              return axios__WEBPACK_IMPORTED_MODULE_15___default.a.put(res, data).then(function (response) {
+
+              _this.setState({
+                fileName: file_name
+              });
+
+              _context2.next = 12;
+              return axios__WEBPACK_IMPORTED_MODULE_16___default.a.put(res, data).then(function (response) {
                 console.log(response);
                 console.log('put success');
 
@@ -558,38 +570,33 @@ function (_Component) {
                 });
               });
 
-            case 11:
-              phonemes = [];
-              _context2.next = 14;
-              return axios__WEBPACK_IMPORTED_MODULE_15___default.a.post(process_url, file_name).then(function (response) {
-                console.log(response);
-                phonemes = response.data.segmented_phonemes;
-                console.log('post success');
-
-                _this.setState({
-                  submitted: true,
-                  submitText: 'Submitted!'
-                });
-              });
-
-            case 14:
-              console.log('phonemes', phonemes);
-              cleanPhonemes = [];
-              prevInsert = null;
-              phonemes.forEach(function (pho) {
-                if (pho != '2' && pho != prevInsert) {
-                  cleanPhonemes.push(pho);
-                  prevInsert = pho; // console.log(pho)
+            case 12:
+              // route to the results page
+              next_router__WEBPACK_IMPORTED_MODULE_2___default.a.push({
+                pathname: '/results',
+                query: {
+                  file: _this.state.fileName
                 }
-              });
-              console.log(cleanPhonemes); // phonemes.forEach(phoneme => {
-              //     if (phoneme != '2') {
-              //         cleanPhonemes.push(phoneme)
+              }); // let phonemes = []
+              // await axios.post(process_url, file_name).then(response => {
+              //     console.log(response)
+              //     phonemes = response.data.segmented_phonemes
+              //     console.log('post success')
+              //     this.setState({submitted:true, submitText:'Submitted!'})
+              // })
+              // console.log('phonemes', phonemes)
+              // let cleanPhonemes = []
+              // let prevInsert = null
+              // phonemes.forEach((pho) => {
+              //     if(pho != '2' && pho != prevInsert) {
+              //         cleanPhonemes.push(pho);
+              //         prevInsert = pho;
+              //         // console.log(pho)
               //     }
               // })
               // console.log(cleanPhonemes)
 
-            case 19:
+            case 13:
             case "end":
               return _context2.stop();
           }
@@ -604,7 +611,8 @@ function (_Component) {
       uploadData: null,
       loading: false,
       submitted: false,
-      submitText: 'Submit Recording'
+      submitText: 'Submit Recording',
+      fileName: null
     };
     return _this;
   }
@@ -627,7 +635,7 @@ function (_Component) {
       };
       navigator.mediaDevices.getUserMedia(cons).then(function (stream) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        recorder = new recorder_js__WEBPACK_IMPORTED_MODULE_16___default.a(audioContext);
+        recorder = new recorder_js__WEBPACK_IMPORTED_MODULE_17___default.a(audioContext);
         recorder.init(stream);
         console.log(recorder);
       });
@@ -635,52 +643,54 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var history = this.props.history;
+
       if (this.state.appIsMounted) {
         var _React$createElement;
 
         return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 190
+            lineNumber: 195
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 191
-          },
-          __self: this
-        }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Layout__WEBPACK_IMPORTED_MODULE_6__["default"], {
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 192
-          },
-          __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_4___default.a, {
-          elevation: "1",
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 193
-          },
-          __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          container: true,
-          spacing: 24,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 194
-          },
-          __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          item: true,
-          xs: 12,
-          style: group,
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_8__["default"], {
           __source: {
             fileName: _jsxFileName,
             lineNumber: 196
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["Typography"], {
+        }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Layout__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 197
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_5___default.a, {
+          elevation: "1",
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 198
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
+          container: true,
+          spacing: 24,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 199
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
+          item: true,
+          xs: 12,
+          style: group,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 201
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
           variant: "h1",
           component: "h3",
           style: {
@@ -688,24 +698,24 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 197
+            lineNumber: 202
           },
           __self: this
-        }, "Record"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["Typography"], {
+        }, "Record"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
           variant: "h5",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 200
+            lineNumber: 205
           },
           __self: this
-        }, "Click the record button and record an attempt to match your selected speech sample.")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default.a, (_React$createElement = {
+        }, "Click the record button and record an attempt to match your selected speech sample.")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, (_React$createElement = {
           item: true,
           xs: 8,
           container: true
         }, _defineProperty(_React$createElement, "xs", 12), _defineProperty(_React$createElement, "direction", "row"), _defineProperty(_React$createElement, "justifyContent", "center"), _defineProperty(_React$createElement, "alignItems", "center"), _defineProperty(_React$createElement, "justify", "center"), _defineProperty(_React$createElement, "alignContent", "space-between"), _defineProperty(_React$createElement, "__source", {
           fileName: _jsxFileName,
-          lineNumber: 204
-        }), _defineProperty(_React$createElement, "__self", this), _React$createElement), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_9___default.a, {
+          lineNumber: 209
+        }), _defineProperty(_React$createElement, "__self", this), _React$createElement), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10___default.a, {
           className: "record-card",
           style: {
             padding: 10,
@@ -714,16 +724,16 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 205
+            lineNumber: 210
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_12___default.a, {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13___default.a, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 206
+            lineNumber: 211
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["Typography"], {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
           gutterBottom: true,
           variant: "body",
           style: {
@@ -732,10 +742,10 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 207
+            lineNumber: 212
           },
           __self: this
-        }, " Please say the following sentence: "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["Typography"], {
+        }, " Please say the following sentence: "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
           variant: "h5",
           style: {
             textDecoration: 'none',
@@ -743,10 +753,10 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 208
+            lineNumber: 213
           },
           __self: this
-        }, "She had your dark suit in greasy wash water all year")))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        }, "She had your dark suit in greasy wash water all year")))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
           style: buttonGroup,
           container: true,
           xs: 12,
@@ -757,20 +767,20 @@ function (_Component) {
           alignContent: "space-between",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 215
+            lineNumber: 220
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default.a, {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
           style: buttonStyle,
           variant: "contained",
           color: "primary",
           onClick: this.recordStart,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 216
+            lineNumber: 221
           },
           __self: this
-        }, "Record Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default.a, {
+        }, "Record Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
           style: buttonStyle,
           variant: "contained",
           color: "secondary",
@@ -778,10 +788,10 @@ function (_Component) {
           disabled: !this.state.recording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 222
+            lineNumber: 227
           },
           __self: this
-        }, "Stop Recording "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default.a, {
+        }, "Stop Recording "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
           style: buttonStyle,
           variant: "contained",
           color: "default",
@@ -789,10 +799,10 @@ function (_Component) {
           disabled: !this.state.completedRecording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 229
+            lineNumber: 234
           },
           __self: this
-        }, "Play Recording "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default.a, {
+        }, "Play Recording "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
           style: buttonStyle,
           variant: "contained",
           color: "secondary",
@@ -800,10 +810,10 @@ function (_Component) {
           disabled: !this.state.completedRecording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 236
+            lineNumber: 241
           },
           __self: this
-        }, "Download ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        }, "Download ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
           style: buttonGroup,
           container: true,
           xs: 12,
@@ -813,16 +823,16 @@ function (_Component) {
           justify: "center",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 244
+            lineNumber: 249
           },
           __self: this
         }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 245
+            lineNumber: 250
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14___default.a, {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_15___default.a, {
           style: submitButton,
           variant: "contained",
           color: "primary",
@@ -830,10 +840,10 @@ function (_Component) {
           disabled: !this.state.completedRecording,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 246
+            lineNumber: 251
           },
           __self: this
-        }, this.state.submitText, " "))), this.state.submitted && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        }, this.state.submitText, " "))), this.state.submitted && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6___default.a, {
           style: result,
           container: true,
           xs: 12,
@@ -843,10 +853,10 @@ function (_Component) {
           justify: "center",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 255
+            lineNumber: 260
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_9___default.a, {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_10___default.a, {
           className: "record-card",
           style: {
             padding: 5,
@@ -856,16 +866,16 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 256
+            lineNumber: 261
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_12___default.a, {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_13___default.a, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 257
+            lineNumber: 262
           },
           __self: this
-        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["Typography"], {
+        }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Typography"], {
           variant: "h5",
           style: {
             textDecoration: 'none',
@@ -873,7 +883,7 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 258
+            lineNumber: 263
           },
           __self: this
         }, "Successfully submitted your speech sample!"))))))));
@@ -1004,7 +1014,7 @@ var recording = function recording() {
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!*******************************!*\
   !*** multi ./pages/record.js ***!
   \*******************************/
@@ -1214,6 +1224,17 @@ module.exports = require("file-saver");
 
 /***/ }),
 
+/***/ "history":
+/*!**************************!*\
+  !*** external "history" ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("history");
+
+/***/ }),
+
 /***/ "next/link":
 /*!****************************!*\
   !*** external "next/link" ***!
@@ -1222,6 +1243,17 @@ module.exports = require("file-saver");
 /***/ (function(module, exports) {
 
 module.exports = require("next/link");
+
+/***/ }),
+
+/***/ "next/router":
+/*!******************************!*\
+  !*** external "next/router" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/router");
 
 /***/ }),
 

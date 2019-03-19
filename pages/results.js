@@ -9,271 +9,183 @@ import CardMedia from '@material-ui/core/CardMedia';
 import {start, parseFile} from './script-1';
 import { Typography, ButtonBase, DialogTitle, CardContent, CardHeader, Button } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+// import LinearProgress from '@material-ui/core/LinearProgress';
+
 // var fs = require('fs')
 import * as V from 'victory';
-
-const dummyData = [
-    {x: "correct", y: 3},
-    {x: "incorrect", y: 1},
-]
+import axios from 'axios'
 
 
-const headerStyle = {
-    textAlign: "center",
-    backgroundColor: "#e0e0e0"
+const yourCard = {
+    borderTop: "5px solid #0097a7",
+    borderRadius: "5px"
 }
 
-const subheaderStyle = {
+const sampleCard = {
+    borderTop: "5px solid #ec407a",
+    borderRadius: "5px"
+}
+
+const loadingStyle = {
     textAlign: "center",
-    backgroundColor: "#e0e0e0"
+    marginTop:'-10',
+    backgroundColor: "#e0e0e0",
+    height: '100vh'
+}
+
+const displayStyle = {
+    textAlign: "center",
+    marginTop:'-10',
+    backgroundColor: "#e0e0e0",
+    height: 'auto'
 }
 
 class results extends Component {
     constructor() {
         super()
-        this.state = {isLoading: true}
-        console.log("hi")
-        // var fs = require('fs')
+        this.state = {
+            isLoading: true,
+            rawPhonemes: null,
+            segmentedPhonemes: null,
+            noteProgression: null
+        }
     }
 
     componentDidMount() {
-        start();
-        parseFile("/static/images/results/text.txt");
-    }
+        this.setState({isLoading: true})
+        // console.log(this.props)
+        // console.log(window.location.search)
+        const process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
+        // get file name from query param
+        const fileName = window.location.search.split('=')[1]
+        console.log(fileName)
+        
+        // get info from backend and take what we need
+        axios.post(process_url, fileName).then(response => {
+            console.log(response)
+            console.log('post success')
+            const data = response.data
 
-    // parseFile = file => {
-    //     console.log("hello this is a test")
-    //     var rawFile = new XMLHttpRequest();
-    //     rawFile.open("GET", file, false);
-    //     rawFile.onreadystatechange = function ()
-    //     {
-    //         if(rawFile.readyState === 4)
-    //         {
-    //             if(rawFile.status === 200 || rawFile.status == 0)
-    //             {
-    //                 var allText = rawFile.responseText;
-    //                 alert(allText);
-    //             }
-    //         }
-    //     }
-    //     rawFile.send(null);
-    // }
+            const sampleLength = data.segmented_phonemes
 
-    readFile(file, store) { 
-        // fs.readFile('/static/images/results/text.txt', (err, data) => { 
-        // if (err) throw err; 
-        // console.log(data.toString()); 
-        // })
-    }
-
-    start() {
-        readFile("/static/images/results/notes.json", run);
-        readFile("/static/images/results/text.txt", otherRun1);
-        readFile("/static/images/results/phoneme.txt", otherRun2);
+            this.setState({
+                isLoading: false,
+                rawPhonemes: data.segmented_phonemes,
+                segmentedPhonemes: data.backend_decoded,
+                noteProgression: data.note_progression
+            })
+        })
     }
 
     render() {
     const isLoading = this.state.isLoading
-    this.readFile()
     return(
         <Layout>
-            <Paper elevation={"2"}>
-                <Grid container spacing={24} direction="row" alignItems="center" justify="center" style={headerStyle}>
-                    <Grid item xs={12}>
-                        <Typography component="h2" variant="h1" gutterBottom> Results </Typography>
+            {isLoading ? (
+                <Paper elevation={"1"}>
+                    <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
+                        <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
+                            {/* https://s3.us-east-2.amazonaws.com/lorro/5f52814c-4865-11e9-8577-eb571fcec879.wav */}
+                            <Typography variant="h2" gutterBottom> Analyzing Your Speech Sample... </Typography>
+                            <LinearProgress style={{flexGrow:1}}/> 
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Paper>
+                </Paper>
+            ) : (
+                <Paper elevation={"1"}>
+                    <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
+                        <Grid container spacing={24} style={displayStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
+                            {/* Summary card */}
+                            <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
+                                <Card>
+                                    <CardContent>
+                                        <Typography variant="h2" gutterBottom> Results Summary </Typography>
+                                        <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
+                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            {/* words comparison */}
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={yourCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Words you </Typography>
+                                        content goes here
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Words sample </Typography>
+                                        content goes here
+                                    </CardContent>
+                                </Card>
+                            </Grid>
 
-            <Paper elevation={"2"}>
-                <Grid container spacing={24} direction="row" alignItems="center" justify="center" style={subheaderStyle}>
-                    {/* Overall Lorro Score */}
-                    <Grid item xs={12} md={8}>
-                        <Card>
-                            <CardHeader
-                                title="Lorro Score"
-                                subheader="Overall assessment of similarity between your sample and the selected sample"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <p> Bacon ipsum dolor amet ball tip beef ribs shankle tail doner chuck hamburger tri-tip pancetta sirloin. Flank sirloin rump ground round ham ribeye tri-tip t-bone prosciutto spare ribs turkey alcatra. Sirloin pork chop leberkas capicola. Kevin buffalo porchetta frankfurter chicken. Short loin sirloin beef meatball. Hamburger tongue fatback tail chicken.
+                            {/* phoneme comparison */}
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={yourCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Phonemes you </Typography>
+                                        {this.state.segmentedPhonemes}
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Phonemes sample </Typography>
+                                        content goes here
+                                    </CardContent>
+                                </Card>
+                            </Grid>
 
-Ham biltong corned beef, cupim cow boudin pork belly doner shoulder rump pork loin porchetta drumstick. Porchetta flank ground round, beef ribs leberkas rump biltong venison swine cow chuck short ribs bresaola ham boudin. Venison turkey shoulder pork, hamburger bacon pork belly capicola corned beef frankfurter tongue flank cow. Andouille turducken biltong cupim leberkas. Pastrami rump swine pork chop pancetta alcatra jerky chicken. Ham hock pork belly andouille buffalo, swine meatloaf landjaeger biltong shank hamburger pig.</p>
-                            </CardContent>
-                        </Card> 
-                    </Grid>
-                    
-                    {/* Uploaded transcription card */}
-                    <Grid item xs={12} md={5}>
-                        <Card>
-                            <CardHeader
-                                title="Speech Sample Transcription"
-                                subheader="Here's what we think you said"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <Typography component="h2" variant="h5">
-                                    <div className="result-2"> </div>
-                                </Typography>
-                            </CardContent>
-                        </Card> 
-                    </Grid>
+                            {/* pitch comparison */}
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={yourCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Pitch you </Typography>
+                                        {this.state.noteProgression}
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Pitch sample </Typography>
+                                        content goes here
+                                    </CardContent>
+                                </Card>
+                            </Grid>
 
-                    {/* Target sample transcription card */}
-                    <Grid item xs={12} md={5}>
-                        <Card>
-                            <CardHeader
-                                title="Target Sample Transcription"
-                                subheader="Here's what was said in the selected target sample"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <Typography component="h2" variant="h5">
-                                    hello hello hello
-                                </Typography>
-                            </CardContent>
-                        </Card> 
+                            {/* pacing comparison */}
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={yourCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Pacing you </Typography>
+                                        content goes here
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h4"> Pacing sample </Typography>
+                                        content goes here
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        </Grid>
                     </Grid>
-
-                    {/* Word accuracy card */}
-                    <Grid item xs={12} md={8} style={{padding:"2px"}}>
-                        <Card>
-                            <CardHeader
-                                title="Word Accuracy"
-                                subheader="Ratio of words pronounced correctly compared to the selected target sample"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <V.VictoryPie
-                                    data={dummyData}
-                                    colorScale={["#4CAF50", "#f44336"]}
-                                />
-                            </CardContent>
-                        </Card> 
-                    </Grid>
-
-                    {/* Uploaded pitches card */}
-                    <Grid item xs={12} md={5}>
-                        <Card>
-                            <CardHeader
-                                title="Speech Sample Pitch Profile"
-                                subheader="Here is a breakdown of your pitches throughout the sample"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <div className="result"></div>
-                                <br/>
-                                <Button variant="contained" color="default" className="play_button"> Listen
-                                    {/* <button className="play_button"> Play </button> */}
-                                </Button>
-                            </CardContent>
-                        </Card> 
-                    </Grid>
-
-                    {/* Target sample pitches card */}
-                    <Grid item xs={12} md={5}>
-                        <Card>
-                            <CardHeader
-                                title="Target Sample Pitch Profile"
-                                subheader="Here is a breakdown of your pitches for the target sample"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <Typography component="h2" variant="h5" style={{height:"30.5vh"}}>
-                                    WIP
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-
-                    {/* Grpahs Card */}
-                    <Grid item xs={12} md={8}>
-                        <Card>
-                            <CardHeader
-                                title="Technical Graphs"
-                                subheader="View waveform, frequency progression and spectograms of your voice"
-                                style={{backgroundColor:"#EC407A", borderBottom:"2px solid black"}}
-                            />
-                            <CardContent>
-                                <ExpansionPanel>
-                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                        <Typography>Show Graphs</Typography>
-                                    </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
-                                    <Grid container spacing={24} direction="row" alignItems="center" justify="center">
-                                        <Grid item xs={12}>
-                                            <Typography variant="h5" gutterBottom> Signal Waveform </Typography>
-                                            <img src="/static/images/results/signal.png"/>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography variant="h5" gutterBottom> Fundamental Frequencies </Typography>
-                                            <img src="/static/images/results/fundamental_frequencies.png"/>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography variant="h5" gutterBottom> Spectrogram </Typography>
-                                            <img src="/static/images/results/spectrogram.png"/>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <div className="result-3"></div>
-                                        </Grid>
-                                        <Grid item hidden>
-                                            <audio controls className="audio">
-                                                <source src="/static/images/results/sample.wav" type="audio/wav"/>
-                                            </audio>
-                                        </Grid>
-                                    </Grid>
-                                    </ExpansionPanelDetails>
-                                </ExpansionPanel>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
-            </Paper>
-
-            <div style={{height:"200px"}}></div>
-
-
-            <Paper elevation={"1"}>
-                <Grid container spacing={24} direction="row" alignItems="center" justify="center" justifyContent="center" style={{height:"auto"}}> 
-                    <Grid item xs={12}>
-                        <Typography variant="h5" gutterBottom> Signal Waveform </Typography>
-                        <img src="/static/images/results/signal.png"/>
-                    </Grid>
-                    <Grid item xs={12}>
-                    <Typography variant="h5" gutterBottom> Fundamental Frequencies </Typography>
-                        <img src="/static/images/results/fundamental_frequencies.png"/>
-                    </Grid>
-                    <Grid item xs={12}>
-                    <Typography variant="h5" gutterBottom> Spectrogram </Typography>
-                        <img src="/static/images/results/spectrogram.png"/>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <audio controls className="audio">
-                            <source src="/static/images/results/sample.wav" type="audio/wav"/>
-                        </audio>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <div className="result"></div>
-                    </Grid>
-                    
-                    <Grid item xs={12}>
-                        <button className="play_button"> Play </button>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <div className="result-2"></div>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <div className="result-3"></div>
-                    </Grid>
-                </Grid>
-            </Paper>
+                </Paper>
+            )}
         </Layout>  
     )}
 }

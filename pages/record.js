@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Router from 'next/router'
+// import { Router, Route, Switch } from "react-router";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -18,6 +20,10 @@ import axios from 'axios'
 import Recorder from 'recorder-js';
 import { recording } from '../scripts/record-script';
 import { saveAs } from 'file-saver';
+
+import { createHashHistory } from 'history'
+
+
 
 var cors = require('cors')
 
@@ -67,7 +73,8 @@ class record extends Component {
             uploadData: null,
             loading: false,
             submitted: false,
-            submitText: 'Submit Recording'
+            submitText: 'Submit Recording',
+            fileName: null
         };
     }
 
@@ -145,46 +152,44 @@ class record extends Component {
         const file_name = res.split('/')[3].split('?')[0]
         console.log(file_name)
 
+        this.setState({fileName:file_name})
+
         await axios.put(res, data).then(response => {
             console.log(response)
             console.log('put success')
             this.setState({loading:true})
         })
 
-        let phonemes = []
-        await axios.post(process_url, file_name).then(response => {
-            console.log(response)
-            phonemes = response.data.segmented_phonemes
-            console.log('post success')
-            this.setState({submitted:true, submitText:'Submitted!'})
+        // route to the results page
+        Router.push({
+            pathname: '/results',
+            query: { file: this.state.fileName }
         })
+        // let phonemes = []
+        // await axios.post(process_url, file_name).then(response => {
+        //     console.log(response)
+        //     phonemes = response.data.segmented_phonemes
+        //     console.log('post success')
+        //     this.setState({submitted:true, submitText:'Submitted!'})
+        // })
 
-        console.log('phonemes', phonemes)
-        let cleanPhonemes = []
-        let prevInsert = null
+        // console.log('phonemes', phonemes)
+        // let cleanPhonemes = []
+        // let prevInsert = null
 
-        phonemes.forEach((pho) => {
-            if(pho != '2' && pho != prevInsert) {
-                cleanPhonemes.push(pho);
-                prevInsert = pho;
-                // console.log(pho)
-            }
-        })
-
-        console.log(cleanPhonemes)
-
-
-        // phonemes.forEach(phoneme => {
-        //     if (phoneme != '2') {
-        //         cleanPhonemes.push(phoneme)
+        // phonemes.forEach((pho) => {
+        //     if(pho != '2' && pho != prevInsert) {
+        //         cleanPhonemes.push(pho);
+        //         prevInsert = pho;
+        //         // console.log(pho)
         //     }
         // })
 
         // console.log(cleanPhonemes)
-        
     }
 
     render() {
+        const {history} = this.props
         if (this.state.appIsMounted) {
             return (
                 <div>

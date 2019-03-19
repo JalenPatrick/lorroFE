@@ -184,7 +184,7 @@ class upload extends Component {
                     {isLoading &&  
                         <Grid item xs={12} md={6}>
                             <div style={{height:"100vh", paddingTop:'35vh'}}>
-                                <Typography variant="h4" style={styles2} gutterBottom> Analyzing Speech Sample... </Typography>
+                                ~<Typography variant="h4" style={styles2} gutterBottom> Analyzing Speech Sample... </Typography>
                                 <LinearProgress style={{flexGrow:1}}/>
                             </div>
                         </Grid>
