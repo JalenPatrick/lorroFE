@@ -48,6 +48,13 @@ const sampleCard = {
     margin: "5vh 0 5vh 0",
 }
 
+const scoreCard = {
+    border: "5px solid #ec407a",
+    borderRadius: "5px",
+    margin: "5vh 0 5vh 0",
+    // width: "50%"
+}
+
 const loadingStyle = {
     textAlign: "center",
     marginTop:'-10',
@@ -171,6 +178,12 @@ class results extends Component {
             value: 90,
             fullMark: 100 
         }
+
+        const phonemeAccuracyObject = {
+            category: "Phoneme Matching",
+            value: 80,
+            fullMark: 100 
+        }
         
         const timingObject = {
             category: "Timing Matching",
@@ -178,7 +191,7 @@ class results extends Component {
             fullMark: 100 
         }
 
-        const dataArray = [pitchObject, wordAccuracyObject, timingObject]
+        const dataArray = [pitchObject, wordAccuracyObject, phonemeAccuracyObject, timingObject]
         return dataArray;
     }
 
@@ -205,6 +218,14 @@ class results extends Component {
                         <Grid container spacing={24} style={displayStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
                             {/* Summary card */}
                             <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
+                                <Card style={scoreCard}>
+                                    <CardContent>
+                                        <Typography variant="h2" gutterBottom> Lorro Score </Typography>
+                                        <Typography variant="body"> WIP - dummy data </Typography>
+                                        <Typography variant="h2" style={{fontFamily:'Merienda', fontSize:'15vmax', color:'#8884d8'}}> 76 </Typography>
+                                    </CardContent>
+                                </Card>
+                                
                                 <Card style={sampleCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Results Summary </Typography>
@@ -230,6 +251,7 @@ class results extends Component {
                                 <Card style={sampleCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Comparision to Sample </Typography>
+                                        <Typography variant="body" gutterBottom> WIP - Dummy Data </Typography>
                                         <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                                         <RadarChart data={compareGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                             <PolarGrid />
@@ -270,77 +292,6 @@ class results extends Component {
                                     </CardContent>
                                 </Card>
                             </Grid>
-                            {/* words comparison */}
-                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={yourCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Words you </Typography>
-                                        content goes here
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={sampleCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Words sample </Typography>
-                                        content goes here
-                                    </CardContent>
-                                </Card>
-                            </Grid> */}
-
-                            {/* phoneme comparison */}
-                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={yourCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Phonemes you </Typography>
-                                        {this.state.segmentedPhonemes}
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={sampleCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Phonemes sample </Typography>
-                                        content goes here
-                                    </CardContent>
-                                </Card>
-                            </Grid> */}
-
-                            {/* pitch comparison */}
-                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={yourCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Pitch you </Typography>
-                                        {this.state.noteProgression}
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={sampleCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Pitch sample </Typography>
-                                        content goes here
-                                    </CardContent>
-                                </Card>
-                            </Grid> */}
-
-                            {/* pacing comparison */}
-                            {/* <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={yourCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Pacing you </Typography>
-                                        content goes here
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6} style={{padding:"0 30px 0 30px"}}>
-                                <Card style={sampleCard}>
-                                    <CardContent>
-                                        <Typography variant="h4"> Pacing sample </Typography>
-                                        content goes here
-                                    </CardContent>
-                                </Card>
-                            </Grid> */}
                         </Grid>
                     </Grid>
                 </Paper>

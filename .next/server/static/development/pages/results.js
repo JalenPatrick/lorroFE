@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -434,6 +434,12 @@ var sampleCard = {
   borderRadius: "5px",
   margin: "5vh 0 5vh 0"
 };
+var scoreCard = {
+  border: "5px solid #ec407a",
+  borderRadius: "5px",
+  margin: "5vh 0 5vh 0" // width: "50%"
+
+};
 var loadingStyle = {
   textAlign: "center",
   marginTop: '-10',
@@ -503,12 +509,17 @@ function (_Component) {
         value: 90,
         fullMark: 100
       };
+      var phonemeAccuracyObject = {
+        category: "Phoneme Matching",
+        value: 80,
+        fullMark: 100
+      };
       var timingObject = {
         category: "Timing Matching",
         value: 30,
         fullMark: 100
       };
-      var dataArray = [pitchObject, wordAccuracyObject, timingObject];
+      var dataArray = [pitchObject, wordAccuracyObject, phonemeAccuracyObject, timingObject];
       return dataArray;
     });
 
@@ -593,20 +604,20 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Layout__WEBPACK_IMPORTED_MODULE_4__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 190
+          lineNumber: 203
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_17__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 191
+          lineNumber: 204
         },
         __self: this
       }), isLoading ? react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2___default.a, {
         elevation: "1",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 193
+          lineNumber: 206
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -619,7 +630,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 194
+          lineNumber: 207
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -631,7 +642,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 195
+          lineNumber: 208
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -644,7 +655,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 197
+          lineNumber: 210
         },
         __self: this
       }, " Analyzing Your Speech Sample... "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_11___default.a, {
@@ -653,14 +664,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 198
+          lineNumber: 211
         },
         __self: this
       })))) : react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2___default.a, {
         elevation: "1",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 203
+          lineNumber: 216
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -672,7 +683,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 204
+          lineNumber: 217
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -685,7 +696,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 205
+          lineNumber: 218
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -697,20 +708,20 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 207
+          lineNumber: 220
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
-        style: sampleCard,
+        style: scoreCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 208
+          lineNumber: 221
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 209
+          lineNumber: 222
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -718,7 +729,47 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 210
+          lineNumber: 223
+        },
+        __self: this
+      }, " Lorro Score "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "body",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 224
+        },
+        __self: this
+      }, " WIP - dummy data "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h2",
+        style: {
+          fontFamily: 'Merienda',
+          fontSize: '15vmax',
+          color: '#8884d8'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 225
+        },
+        __self: this
+      }, " 76 "))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        style: sampleCard,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 229
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 230
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h2",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 231
         },
         __self: this
       }, " Results Summary "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -726,14 +777,14 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 213
+          lineNumber: 234
         },
         __self: this
       }, " Fundamental frequencies vs. spoken phoneme "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 214
+          lineNumber: 235
         },
         __self: this
       }, " Hover over the chart to see the phoneme spoken and what pitch it was spoken at "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
@@ -741,7 +792,7 @@ function (_Component) {
         aspect: 4.0 / 2.0,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 215
+          lineNumber: 236
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["AreaChart"], {
@@ -754,14 +805,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 216
+          lineNumber: 237
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["CartesianGrid"], {
         strokeDasharray: "3 3",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 217
+          lineNumber: 238
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["XAxis"], {
@@ -769,7 +820,7 @@ function (_Component) {
         hide: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 218
+          lineNumber: 239
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Label"], {
@@ -778,7 +829,7 @@ function (_Component) {
         position: "bottom",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 219
+          lineNumber: 240
         },
         __self: this
       })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["YAxis"], {
@@ -789,13 +840,13 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 221
+          lineNumber: 242
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 222
+          lineNumber: 243
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
@@ -809,7 +860,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 223
+          lineNumber: 244
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
@@ -819,20 +870,20 @@ function (_Component) {
         dot: false,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 224
+          lineNumber: 245
         },
         __self: this
       }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: sampleCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 230
+          lineNumber: 251
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 231
+          lineNumber: 252
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -840,15 +891,23 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 232
+          lineNumber: 253
         },
         __self: this
-      }, " Comparision to Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
+      }, " Comparision to Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "body",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 254
+        },
+        __self: this
+      }, " WIP - Dummy Data "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
         width: "100%",
         aspect: 4.0 / 2.0,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 233
+          lineNumber: 255
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["RadarChart"], {
@@ -861,32 +920,32 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 234
+          lineNumber: 256
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarGrid"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 235
+          lineNumber: 257
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarAngleAxis"], {
         dataKey: "category",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 236
+          lineNumber: 258
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarRadiusAxis"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 237
+          lineNumber: 259
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 238
+          lineNumber: 260
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Radar"], {
@@ -898,20 +957,20 @@ function (_Component) {
         fillOpacity: 0.6,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 239
+          lineNumber: 261
         },
         __self: this
       }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: sampleCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 245
+          lineNumber: 267
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 246
+          lineNumber: 268
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -919,19 +978,19 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 247
+          lineNumber: 269
         },
         __self: this
       }, " View Raw Data "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanel__WEBPACK_IMPORTED_MODULE_13___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 248
+          lineNumber: 270
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanelSummary__WEBPACK_IMPORTED_MODULE_14___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 249
+          lineNumber: 271
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -942,13 +1001,13 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 250
+          lineNumber: 272
         },
         __self: this
       }, " Click to open ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanelDetails__WEBPACK_IMPORTED_MODULE_15___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 252
+          lineNumber: 274
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -960,7 +1019,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 253
+          lineNumber: 275
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -973,7 +1032,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 255
+          lineNumber: 277
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -981,7 +1040,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 256
+          lineNumber: 278
         },
         __self: this
       }, " Phonemes "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -989,7 +1048,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 257
+          lineNumber: 279
         },
         __self: this
       }, " ", this.state.segmentedPhonemes, " ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1002,7 +1061,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 259
+          lineNumber: 281
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1010,7 +1069,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 260
+          lineNumber: 282
         },
         __self: this
       }, " Note Progression "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1018,7 +1077,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 261
+          lineNumber: 283
         },
         __self: this
       }, " ", this.state.noteProgression, " ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1031,7 +1090,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 263
+          lineNumber: 285
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1039,7 +1098,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 264
+          lineNumber: 286
         },
         __self: this
       }, " Fundamental Frequencies "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1047,7 +1106,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 265
+          lineNumber: 287
         },
         __self: this
       }, " ", this.state.frequencies, " "))))))))))));
@@ -1197,7 +1256,7 @@ function run(json) {
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!********************************!*\
   !*** multi ./pages/results.js ***!
   \********************************/
