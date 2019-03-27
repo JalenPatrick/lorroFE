@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -472,8 +472,9 @@ function (_Component) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getFreqData", function (freqArray, phonemeArray, notesArray) {
       console.log(freqArray);
       console.log(phonemeArray);
+      console.log(notesArray);
       var dataArray = [];
-      if (freqArray) for (var i = 0; i < freqArray.length; i++) {
+      if (freqArray && phonemeArray && notesArray) for (var i = 0; i < freqArray.length; i++) {
         var dataObject = {
           freq: Math.round(freqArray[i]),
           phoneme: phonemeArray[i],
@@ -482,7 +483,12 @@ function (_Component) {
         dataArray.push(dataObject);
       }
       console.log(dataArray);
-      return dataArray;
+
+      if (dataArray) {
+        return dataArray;
+      } else {
+        getFreqData(freqArray, phonemeArray, notesArray);
+      }
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getCompareData", function (freq, timing, phonemes) {
@@ -511,7 +517,20 @@ function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "generateScore", function (freq, timing, phonemes) {
-      return ((freq + timing + phonemes) / 3).toFixed(2);
+      return ((freq + timing + phonemes + 90) / 4).toFixed(2);
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "wordMatching", function (raw) {
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        console.log(parsed);
+      }
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "playTarget", function (target_url) {
+      var audio = new Audio(target_url);
+      audio.play();
+      console.log(target_url);
     });
 
     _this.state = {
@@ -568,11 +587,17 @@ function (_Component) {
                     segmentedPhonemes: sampleData.backend_decoded,
                     noteProgression: sampleData.note_progression,
                     frequencies: sampleData.fundamental_frequencies,
-                    wordCompare: res.compareProcess,
+                    t_rawPhonemes: targetData.segmented_phonemes,
+                    t_segmentedPhonemes: targetData.backend_decoded,
+                    t_noteProgression: targetData.note_progression,
+                    t_frequencies: targetData.fundamental_frequencies,
+                    wordCompare: res.compare_transcribe,
                     freqScore: res.freq_diff_score,
                     ppAccuracyScore: res.postprocessed_accuracy_score,
                     rawAccuracyScore: res.raw_accuracy_score
                   });
+
+                  console.log(_this2.state);
                 });
 
               case 10:
@@ -590,27 +615,38 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var isLoading = this.state.isLoading;
-      var freqGraphData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression);
+      var freqSampleData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression);
+      var freqTargetData = this.getFreqData(this.state.t_frequencies, this.state.t_rawPhonemes, this.state.t_noteProgression);
       var compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore);
+      var wordMatching = this.wordMatching(this.state.wordCompare);
       var lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore);
+      var test = new URLSearchParams(window.location.search);
+      var tar = test.get('target');
+      var file = test.get('file'); // console.log(tar, file);
+
+      var target_url = 'https://s3.us-east-2.amazonaws.com/lorro/' + tar + '.wav';
+      var sample_url = 'https://s3.us-east-2.amazonaws.com/lorro/' + file; // console.log(sample_url, target_url)
+
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Layout__WEBPACK_IMPORTED_MODULE_4__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 196
+          lineNumber: 233
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_17__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 197
+          lineNumber: 234
         },
         __self: this
       }), isLoading ? react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2___default.a, {
         elevation: "1",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 199
+          lineNumber: 236
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -623,7 +659,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 200
+          lineNumber: 237
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -635,7 +671,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 201
+          lineNumber: 238
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -648,7 +684,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 203
+          lineNumber: 239
         },
         __self: this
       }, " Analyzing Your Speech Sample... "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_11___default.a, {
@@ -657,14 +693,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 204
+          lineNumber: 240
         },
         __self: this
       })))) : react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2___default.a, {
         elevation: "1",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 209
+          lineNumber: 245
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -676,7 +712,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 210
+          lineNumber: 246
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -689,7 +725,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 211
+          lineNumber: 247
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -701,20 +737,20 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 213
+          lineNumber: 249
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: scoreCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 214
+          lineNumber: 250
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 215
+          lineNumber: 251
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -722,7 +758,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 216
+          lineNumber: 252
         },
         __self: this
       }, " Lorro Score "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -734,211 +770,10 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 217
+          lineNumber: 253
         },
         __self: this
       }, " ", lorroScore, " "))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
-        style: sampleCard,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 221
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 222
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
-        variant: "h2",
-        gutterBottom: true,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 223
-        },
-        __self: this
-      }, " Results Summary "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
-        variant: "h4",
-        gutterBottom: true,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 226
-        },
-        __self: this
-      }, " Fundamental frequencies vs. spoken phoneme "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
-        variant: "body",
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 227
-        },
-        __self: this
-      }, " Hover over the chart to see the phoneme spoken and what pitch it was spoken at "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
-        width: "100%",
-        aspect: 4.0 / 2.0,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 228
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["AreaChart"], {
-        data: freqGraphData,
-        margin: {
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 229
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["CartesianGrid"], {
-        strokeDasharray: "3 3",
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 230
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["XAxis"], {
-        dataKey: "phoneme",
-        hide: true,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 231
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Label"], {
-        value: "Detected Phoneme",
-        offset: 10,
-        position: "bottom",
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 232
-        },
-        __self: this
-      })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["YAxis"], {
-        label: {
-          value: 'Fundamental Frequency (hz)',
-          angle: -90,
-          position: 'insideLeft'
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 234
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 235
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
-        type: "monotone",
-        dataKey: "freq",
-        stroke: "#8884d8",
-        fill: "#8884d8",
-        unit: "hz",
-        activeDot: {
-          r: 8
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 236
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
-        type: "monotone",
-        dataKey: "note",
-        stroke: "#8884d8",
-        dot: false,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 237
-        },
-        __self: this
-      }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
-        style: sampleCard,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 243
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 244
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
-        variant: "h2",
-        gutterBottom: true,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 245
-        },
-        __self: this
-      }, " Comparision to Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
-        width: "100%",
-        aspect: 4.0 / 2.0,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 246
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["RadarChart"], {
-        data: compareGraphData,
-        margin: {
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 247
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarGrid"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 248
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarAngleAxis"], {
-        dataKey: "category",
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 249
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarRadiusAxis"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 250
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 251
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Radar"], {
-        name: "accuracy",
-        unit: "%",
-        dataKey: "value",
-        stroke: "#8884d8",
-        fill: "#8884d8",
-        fillOpacity: 0.6,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 252
-        },
-        __self: this
-      }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: sampleCard,
         __source: {
           fileName: _jsxFileName,
@@ -959,16 +794,359 @@ function (_Component) {
           lineNumber: 260
         },
         __self: this
+      }, " Sample Frequencies "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h4",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 263
+        },
+        __self: this
+      }, " Fundamental frequencies vs. spoken phoneme "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "body",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 264
+        },
+        __self: this
+      }, " Hover over the chart to see the phoneme spoken and what pitch it was spoken at "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
+        width: "100%",
+        aspect: 4.0 / 2.0,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 265
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["AreaChart"], {
+        data: freqSampleData,
+        margin: {
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 266
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["CartesianGrid"], {
+        strokeDasharray: "3 3",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 267
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["XAxis"], {
+        dataKey: "phoneme",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 268
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Label"], {
+        value: "Detected Phoneme",
+        offset: 10,
+        position: "bottom",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 269
+        },
+        __self: this
+      })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["YAxis"], {
+        label: {
+          value: 'Fundamental Frequency (hz)',
+          angle: -90,
+          position: 'insideLeft'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 271
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 272
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
+        type: "monotone",
+        dataKey: "freq",
+        stroke: "#8884d8",
+        fill: "#8884d8",
+        unit: "hz",
+        activeDot: {
+          r: 8
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 273
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
+        type: "monotone",
+        dataKey: "note",
+        stroke: "#8884d8",
+        dot: false,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 274
+        },
+        __self: this
+      }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
+        variant: "contained",
+        color: "primary",
+        onClick: function onClick() {
+          return _this3.playTarget(sample_url);
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 277
+        },
+        __self: this
+      }, " Play Sample "))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        style: sampleCard,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 286
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 287
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h2",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 288
+        },
+        __self: this
+      }, " Target Frequencies "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h4",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 291
+        },
+        __self: this
+      }, " Fundamental frequencies vs. spoken phoneme "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "body",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 292
+        },
+        __self: this
+      }, " Hover over the chart to see the phoneme spoken and what pitch it was spoken at "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
+        width: "100%",
+        aspect: 4.0 / 2.0,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 293
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["AreaChart"], {
+        data: freqTargetData,
+        margin: {
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 294
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["CartesianGrid"], {
+        strokeDasharray: "3 3",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 295
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["XAxis"], {
+        dataKey: "phoneme",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 296
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Label"], {
+        value: "Detected Phoneme",
+        offset: 10,
+        position: "bottom",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 297
+        },
+        __self: this
+      })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["YAxis"], {
+        label: {
+          value: 'Fundamental Frequency (hz)',
+          angle: -90,
+          position: 'insideLeft'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 299
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 300
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
+        type: "monotone",
+        dataKey: "freq",
+        stroke: "#81C784",
+        fill: "#81C784",
+        unit: "hz",
+        activeDot: {
+          r: 8
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 301
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Area"], {
+        type: "monotone",
+        dataKey: "note",
+        stroke: "#81C784",
+        dot: false,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 302
+        },
+        __self: this
+      }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
+        variant: "contained",
+        color: "primary",
+        onClick: function onClick() {
+          return _this3.playTarget(target_url);
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 305
+        },
+        __self: this
+      }, " Play Target "))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        style: sampleCard,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 314
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 315
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h2",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 316
+        },
+        __self: this
+      }, " Comparision to Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["ResponsiveContainer"], {
+        width: "100%",
+        aspect: 4.0 / 2.0,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 317
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["RadarChart"], {
+        data: compareGraphData,
+        margin: {
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 318
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarGrid"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 319
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarAngleAxis"], {
+        dataKey: "category",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 320
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["PolarRadiusAxis"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 321
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Tooltip"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 322
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_18__["Radar"], {
+        name: "accuracy",
+        unit: "%",
+        dataKey: "value",
+        stroke: "#8884d8",
+        fill: "#8884d8",
+        fillOpacity: 0.6,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 323
+        },
+        __self: this
+      }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        style: sampleCard,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 329
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 330
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h2",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 331
+        },
+        __self: this
       }, " View Raw Data "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanel__WEBPACK_IMPORTED_MODULE_13___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 261
+          lineNumber: 332
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanelSummary__WEBPACK_IMPORTED_MODULE_14___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 262
+          lineNumber: 333
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -979,13 +1157,13 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 263
+          lineNumber: 334
         },
         __self: this
       }, " Click to open ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanelDetails__WEBPACK_IMPORTED_MODULE_15___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 265
+          lineNumber: 336
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -997,7 +1175,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 266
+          lineNumber: 337
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1010,7 +1188,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 268
+          lineNumber: 339
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1018,7 +1196,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 269
+          lineNumber: 340
         },
         __self: this
       }, " Phonemes "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1026,7 +1204,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 270
+          lineNumber: 341
         },
         __self: this
       }, " ", this.state.segmentedPhonemes, " ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1039,7 +1217,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 272
+          lineNumber: 343
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1047,7 +1225,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 273
+          lineNumber: 344
         },
         __self: this
       }, " Note Progression "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1055,7 +1233,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 274
+          lineNumber: 345
         },
         __self: this
       }, " ", this.state.noteProgression, " ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1068,7 +1246,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 276
+          lineNumber: 347
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1076,7 +1254,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 277
+          lineNumber: 348
         },
         __self: this
       }, " Fundamental Frequencies "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1084,7 +1262,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 278
+          lineNumber: 349
         },
         __self: this
       }, " ", this.state.frequencies, " "))))))))))));
@@ -1234,7 +1412,7 @@ function run(json) {
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /*!********************************!*\
   !*** multi ./pages/results.js ***!
   \********************************/

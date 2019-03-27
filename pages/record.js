@@ -375,7 +375,7 @@ class record extends Component {
                                             variant='contained'
                                             color='primary'
                                             onClick={this.submitRecording}
-                                            disabled={!this.state.completedRecording}> 
+                                            disabled={!this.state.completedRecording || !this.state.selectedTarget}> 
                                         {this.state.submitText} </Button>
                                     </div>
                                 </Grid>

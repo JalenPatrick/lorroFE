@@ -60205,7 +60205,7 @@ function (_Component) {
           variant: "contained",
           color: "primary",
           onClick: this.submitRecording,
-          disabled: !this.state.completedRecording,
+          disabled: !this.state.completedRecording || !this.state.selectedTarget,
           __source: {
             fileName: _jsxFileName,
             lineNumber: 373

@@ -123,20 +123,26 @@ class results extends Component {
                 segmentedPhonemes: sampleData.backend_decoded,
                 noteProgression: sampleData.note_progression,
                 frequencies: sampleData.fundamental_frequencies,
-                wordCompare: res.compareProcess,
+                t_rawPhonemes: targetData.segmented_phonemes,
+                t_segmentedPhonemes: targetData.backend_decoded,
+                t_noteProgression: targetData.note_progression,
+                t_frequencies: targetData.fundamental_frequencies,
+                wordCompare: res.compare_transcribe,
                 freqScore: res.freq_diff_score,
                 ppAccuracyScore: res.postprocessed_accuracy_score,
                 rawAccuracyScore: res.raw_accuracy_score
             })
+            console.log(this.state)
         })
     }
 
     getFreqData = (freqArray, phonemeArray, notesArray) => {
         console.log(freqArray)
         console.log(phonemeArray)
+        console.log(notesArray)
         let dataArray = []
 
-        if (freqArray)
+        if (freqArray && phonemeArray && notesArray)
             for (let i = 0; i < freqArray.length; i++) {
                 let dataObject = {
                     freq: Math.round(freqArray[i]),
@@ -146,7 +152,12 @@ class results extends Component {
                 dataArray.push(dataObject)
             }
         console.log(dataArray)
-        return dataArray
+        if (dataArray) {
+            return dataArray;
+        } else {
+            getFreqData(freqArray, phonemeArray, notesArray);
+        }
+        
     }
 
     // used to contruct the radial plot which displays the users accuracy to the target sample
@@ -184,14 +195,40 @@ class results extends Component {
     }
 
     generateScore = (freq, timing, phonemes) => {
-        return ((freq + timing + phonemes)/3).toFixed(2);
+        return ((freq + timing + phonemes + 90)/4).toFixed(2);
+    }
+
+    wordMatching = (raw) => {
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            console.log(parsed);
+        }     
+    }
+
+    playTarget = (target_url) => {
+        const audio = new Audio(target_url);
+        audio.play();
+        console.log(target_url);
     }
 
     render() {
     const isLoading = this.state.isLoading
-    const freqGraphData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
+    const freqSampleData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
+    const freqTargetData = this.getFreqData(this.state.t_frequencies, this.state.t_rawPhonemes, this.state.t_noteProgression)
     const compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
+    const wordMatching = this.wordMatching(this.state.wordCompare);
     const lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
+    const test = new URLSearchParams(window.location.search)
+    const tar = test.get('target');
+    const file = test.get('file');
+
+    // console.log(tar, file);
+
+    const target_url = 'https://s3.us-east-2.amazonaws.com/lorro/' + tar + '.wav';
+    const sample_url = 'https://s3.us-east-2.amazonaws.com/lorro/' + file;
+    // console.log(sample_url, target_url)
+
+
     return(
         <Layout>
         <Fonts/>
@@ -199,7 +236,6 @@ class results extends Component {
                 <Paper elevation={"1"}>
                     <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
                         <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
-                            {/* https://s3.us-east-2.amazonaws.com/lorro/5f52814c-4865-11e9-8577-eb571fcec879.wav */}
                             <Typography variant="h2" gutterBottom style={{color:'black', fontFamily:'Merienda', fontSize: '7vmax'}}> Analyzing Your Speech Sample... </Typography>
                             <LinearProgress style={{flexGrow:1}}/> 
                         </Grid>
@@ -218,17 +254,18 @@ class results extends Component {
                                     </CardContent>
                                 </Card>
                                 
+                                {/* Recorded Sample */}
                                 <Card style={sampleCard}>
                                     <CardContent>
-                                        <Typography variant="h2" gutterBottom> Results Summary </Typography>
+                                        <Typography variant="h2" gutterBottom> Sample Frequencies </Typography>
                                         {/* <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
                                         <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography> */}
                                         <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
                                         <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
                                         <ResponsiveContainer width='100%' aspect={4.0/2.0}>
-                                        <AreaChart data={freqGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                        <AreaChart data={freqSampleData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="phoneme" hide={true}>
+                                            <XAxis dataKey="phoneme">
                                                 <Label value="Detected Phoneme" offset={10} position="bottom" />
                                             </XAxis>
                                             <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
@@ -237,8 +274,42 @@ class results extends Component {
                                             <Area type="monotone" dataKey="note" stroke="#8884d8" dot={false} />
                                         </AreaChart>
                                         </ResponsiveContainer>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => this.playTarget(sample_url)}
+                                        > Play Sample </Button>
                                     </CardContent>
                                 </Card>
+
+                                {/* Target Sample */}
+                                <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h2" gutterBottom> Target Frequencies </Typography>
+                                        {/* <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
+                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography> */}
+                                        <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
+                                        <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
+                                        <ResponsiveContainer width='100%' aspect={4.0/2.0}>
+                                        <AreaChart data={freqTargetData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="phoneme">
+                                                <Label value="Detected Phoneme" offset={10} position="bottom" />
+                                            </XAxis>
+                                            <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
+                                            <Tooltip />
+                                            <Area type="monotone" dataKey="freq" stroke="#81C784" fill="#81C784" unit="hz" activeDot={{ r: 8 }} />
+                                            <Area type="monotone" dataKey="note" stroke="#81C784" dot={false} />
+                                        </AreaChart>
+                                        </ResponsiveContainer>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => this.playTarget(target_url)}
+                                        > Play Target </Button>
+                                    </CardContent>
+                                </Card>
+
                                 
                                 <Card style={sampleCard}>
                                     <CardContent>
