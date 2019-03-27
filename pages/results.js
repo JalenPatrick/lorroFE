@@ -219,6 +219,7 @@ class results extends Component {
     const compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
     const wordMatching = this.wordMatching(this.state.wordCompare);
     const lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
+    
     const test = new URLSearchParams(window.location.search)
     const tar = test.get('target');
     const file = test.get('file');

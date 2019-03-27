@@ -21,6 +21,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Radio from '@material-ui/core/Radio';
 
 
 const styles = {
@@ -64,7 +65,16 @@ const labelStyle = {
     marginTop: '10px',
     borderRadius: '10px',
     border: '1px solid white'
+}
 
+const sampleGroup = {
+    textAlign: "center",
+    paddingBottom: "50px"
+}
+
+const selectCards = {
+    magin: '0px 20px 10px 20px',
+    borderBottom:'3px solid #03A9F4'
 }
 
 
@@ -77,7 +87,8 @@ class upload extends Component {
             loaded: 0,
             loading: false,
             submitted: false,
-            fileName: null
+            fileName: null,
+            selectedTarget: null
         }
     }
 
@@ -86,6 +97,18 @@ class upload extends Component {
             selectedTarget: selected
         })
     }
+
+    playTarget = (target_url) => {
+        const audio = new Audio(target_url);
+        audio.play();
+        console.log(target_url);
+    }
+
+    handleChange = event => {
+        console.log(event.target.value)
+        this.setState({ selectedTarget: event.target.value });
+        console.log(this.state.selectedTarget)
+    };
 
     handleUpload = async () => {
         const data = this.state.selectedFile
@@ -117,7 +140,7 @@ class upload extends Component {
         // route to the results page
         Router.push({
             pathname: '/results',
-            query: { file: this.state.fileName }
+            query: { target: this.state.selectedTarget, file: this.state.fileName }
         })
 
         // await axios.post(process_url, file_name).then(response => {
@@ -141,16 +164,86 @@ class upload extends Component {
                 {!this.state.submitted ? (
                     <Grid container spacing={24} style={pageStyles} direction="row" justifyContent="center" alignItems="center" justify="center">
                         <Grid item xs={12} container justifyContent="center" alignItems="center" justify="center">
-                            <Grid item xs={12} md={6}>
-                                <Typography variant="h4" style={styles} gutterBottom>
-                                    Step 1
-                                </Typography>
-                                <Typography variant="h5" style={styles} gutterBottom>
-                                    Select a speech style to match
-                                </Typography>
-                                <hr/>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid style={sampleGroup} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
+                                <Grid item xs={12} md={12}>
+                                        <Typography variant="h4" style={styles} gutterBottom>
+                                            Step 1
+                                        </Typography>
+                                        <Typography variant="h5" style={styles} gutterBottom>
+                                            Select target audio sample
+                                        </Typography>
+                                        <hr/>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Southern </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-JDM1-southern'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-JDM1-southern'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-JDM1-southern.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Wisconsin </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-DLD0-wisconsin'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-DLD0-wisconsin'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-DLD0-wisconsin.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Western </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-REH0-western'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-REH0-western'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-REH0-western.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> New England </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-VMH0-new-england'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-VMH0-new-england'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-VMH0-new-england.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </Grid>
+                            <Grid item xs={12} md={12}>
                                 <Typography variant="h4" style={styles} gutterBottom>
                                     Step 2
                                 </Typography>
@@ -161,78 +254,7 @@ class upload extends Component {
                             </Grid>
                         </Grid>
     
-                        <Grid item xs={6} container justifyContent="center" alignItems="center" justify="center">
-                            <Grid item xs={12} md={6} className="test">
-                                <Card className="record-card" style={{margin:10}} onClick={() => this.changeTarget("british-english")}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            style={{height: 0, paddingTop: '50%'}}
-                                            image="/static/images/card-icons/london.jpg"
-                                            title="Record an Audio Sample"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2"> British English </Typography>
-                                            <Typography component="p">
-                                                Record a brand new audio sample attempting to match a target speech sample.
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Card className="record-card" style={{margin:10}} onClick={() => this.changeTarget("canadian-english")}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            style={{height: 0, paddingTop: '50%'}}
-                                            image="/static/images/card-icons/canada.jpg"
-                                            title="Record an Audio Sample"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2"> Canadian English </Typography>
-                                            <Typography component="p">
-                                                Record a brand new audio sample attempting to match a target speach sample.
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Card className="record-card" style={{margin:10}} onClick={() => this.changeTarget("american-southern")}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            style={{height: 0, paddingTop: '50%'}}
-                                            image="/static/images/card-icons/texas.jpg"
-                                            title="Record an Audio Sample"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2"> American - Southern </Typography>
-                                            <Typography component="p">
-                                                Record a brand new audio sample attempting to match a target speach sample.
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Card className="record-card" style={{margin:10}} onClick={() => this.changeTarget("american-eastern")}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            style={{height: 0, paddingTop: '50%'}}
-                                            image="/static/images/card-icons/ny.jpg"
-                                            title="Record an Audio Sample"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2"> American - Eastern </Typography>
-                                            <Typography component="p">
-                                                Record a brand new audio sample attempting to match a target speach sample.
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </Grid>
-                        </Grid>
-    
-                        <Grid item xs={6}>
+                        <Grid item xs={12}>
                             <Grid item xs={12}>
                                 <Typography variant="body1" style={styles}>
                                     Upload an audio recording of you speaking attempting to match a speech sample.
