@@ -201,7 +201,8 @@ class results extends Component {
     wordMatching = (raw) => {
         if (raw) {
             const parsed = JSON.parse(raw);
-            console.log(parsed);
+            const interpreted = parsed.results.transcripts[0].transcript;
+            return interpreted;
         }     
     }
 
@@ -279,6 +280,8 @@ class results extends Component {
                                             color="primary"
                                             onClick={() => this.playTarget(sample_url)}
                                         > Play Sample </Button>
+                                        <Typography variant="subtitle" style={{margin: '20px 0px 0px 0px'}}> Here's what we think you said: </Typography>
+                                        <Typography variant="h6" style={{margin: '20px 0px 0px 0px', color: '#8884d8'}}> {wordMatching} </Typography>
                                     </CardContent>
                                 </Card>
 
