@@ -15,6 +15,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Divider from '@material-ui/core/Divider';
+
+import Radio from '@material-ui/core/Radio';
 
 import axios from 'axios'
 import Recorder from 'recorder-js';
@@ -29,13 +32,19 @@ var cors = require('cors')
 
 
 const group = {
-    height: "30vh",
+    height: "25vh",
     textAlign: "center"
 }
 
 const buttonGroup = {
-    height: "10vh",
-    textAlign: "center"
+    height: "auto",
+    padding: "20px 0px 20px 0px",
+    textAlign: "center",
+}
+
+const sampleGroup = {
+    textAlign: "center",
+    paddingBottom: "50px"
 }
 
 const result = {
@@ -62,6 +71,11 @@ const loadingStyle = {
     height: '100vh'
 }
 
+const selectCards = {
+    magin: '0px 20px 10px 20px',
+    borderBottom:'3px solid #03A9F4'
+}
+
 // audio stuff
 let isRecording = false;
 let blob = null;
@@ -81,7 +95,8 @@ class record extends Component {
             loading: false,
             submitted: false,
             submitText: 'Submit Recording',
-            fileName: null
+            fileName: null,
+            selectedTarget: null
         };
     }
 
@@ -134,6 +149,18 @@ class record extends Component {
         saveAs(audioURL, "lorro_record.wav");
     }
 
+    playTarget = (target_url) => {
+        const audio = new Audio(target_url);
+        audio.play();
+        console.log(target_url);
+    }
+
+    handleChange = event => {
+        console.log(event.target.value)
+        this.setState({ selectedTarget: event.target.value });
+        console.log(this.state.selectedTarget)
+    };
+
     // uploads the audio recording to the AWS server via the following 3 step process
     submitRecording = async () => {
         const data = this.state.uploadData
@@ -170,7 +197,7 @@ class record extends Component {
         // route to the results page
         Router.push({
             pathname: '/results',
-            query: { file: this.state.fileName }
+            query: { target: this.state.selectedTarget, file: this.state.fileName }
         })
         // let phonemes = []
         // await axios.post(process_url, file_name).then(response => {
@@ -214,7 +241,8 @@ class record extends Component {
                                         Click the record button and record an attempt to match your selected speech sample.
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={8} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
+
+                                <Grid container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
                                     <Card className="record-card" style={{padding:10, marginBottom:'5vh', borderBottom:'3px solid #3f51b5'}}>
                                         <CardContent>
                                             <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Please say the following sentence: </Typography>
@@ -224,8 +252,94 @@ class record extends Component {
                                         </CardContent>
                                     </Card>
                                 </Grid>
+
+
+                                <Grid style={sampleGroup} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
+                                    <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px", margin:'0px 0px 15px 0px'}}>
+                                        <Typography variant="h5">
+                                            Step 1: Select a Target Speech Sample
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Southern </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-JDM1-southern'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-JDM1-southern'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-JDM1-southern.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Wisconsin </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-DLD0-wisconsin'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-DLD0-wisconsin'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-DLD0-wisconsin.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> Western </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-REH0-western'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-REH0-western'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-REH0-western.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12} md={2} style={{padding:"0 30px 0 30px"}}>
+                                        <Card style={selectCards}>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="body" style={{textAlign:'center', fontFamily:'Lato'}}> New England </Typography>
+                                                <Radio
+                                                    checked={this.state.selectedTarget === 'target-sample-VMH0-new-england'}
+                                                    onChange={this.handleChange}
+                                                    value='target-sample-VMH0-new-england'
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => this.playTarget('https://s3.us-east-2.amazonaws.com/lorro/target-sample-VMH0-new-england.wav')}
+                                                > Play </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </Grid>
+
+
+
                                 {/* start/stop buttons */}
                                 <Grid style={buttonGroup} container xs={12} direction="row" justifyContent="center" alignItems="center" justify="center" alignContent="space-between">
+                                    <Divider variant='inset'/>
+                                    <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px", margin:'0px 0px 15px 0px'}}>
+                                        <Typography variant="h5">
+                                            Step 2: Record and Upload Your Sample
+                                        </Typography>
+                                    </Grid>
                                     <Button
                                         style={buttonStyle}
                                         variant='contained'

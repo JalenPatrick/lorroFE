@@ -91,39 +91,42 @@ class results extends Component {
         // console.log(this.props)
         // console.log(window.location.search)
         const process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
-        const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
+        
         // get file name from query param
-        const fileName = window.location.search.split('=')[1]
-        console.log(fileName)
+        const test = new URLSearchParams(window.location.search)
+        const tar = test.get('target');
+        const file = test.get('file')
+
+        // const target
+
+        const sendObj = {
+            file: file,
+            target: tar
+        }
+
+        const stringfied = JSON.stringify(sendObj)
+        console.log('results', JSON.stringify(sendObj))
 
         let transcribe
         
         // get info from backend and take what we need
-        await axios.post(process_url, fileName).then(response => {
-            console.log(response)
-            console.log('post success')
-            const data = response.data
-
-            const sampleLength = data.segmented_phonemes
+        await axios.post(process_url, stringfied).then(response => {
+            console.log('result -', response)
+            console.log('post success - result')
+            const sampleData = response.data.sample_data
+            const targetData = response.data.target_data
+            const res = response.data
 
             this.setState({
                 isLoading: false,
-                rawPhonemes: data.segmented_phonemes,
-                segmentedPhonemes: data.backend_decoded,
-                noteProgression: data.note_progression,
-                frequencies: data.fundamental_frequencies
-            })
-        })
-
-        await axios.post(process_url, fileName).then(response => {
-            console.log(response)
-            console.log('post success')
-            const data = response.data
-
-            const sampleLength = data.segmented_phonemes
-
-            this.setState({
-                
+                rawPhonemes: sampleData.segmented_phonemes,
+                segmentedPhonemes: sampleData.backend_decoded,
+                noteProgression: sampleData.note_progression,
+                frequencies: sampleData.fundamental_frequencies,
+                wordCompare: res.compareProcess,
+                freqScore: res.freq_diff_score,
+                ppAccuracyScore: res.postprocessed_accuracy_score,
+                rawAccuracyScore: res.raw_accuracy_score
             })
         })
     }
@@ -151,25 +154,10 @@ class results extends Component {
     // 1. Pitch --> average spoken word frequency over the sample
     // 2. Word Accuracy --> how correct the words are (use confidence from AWS)
     // 3. Timing --> raw duration of the samples
-    getCompareData = (freqArray, wordArray) => {
-        let avgFreq, totalSum, totalFreqs, speakingTime;
-        
-        if (freqArray) {
-            for (let i = 0; i < freqArray.length; i++) {
-                if (freqArray[i] != 0) {
-                    totalSum += freqArray[i];
-                    totalFreqs += 1;
-                }
-            }
-        }
-        
-
-        speakingTime = totalFreqs * 0.02;
-        avgFreq = totalSum/totalFreqs;
-
+    getCompareData = (freq, timing, phonemes) => {
         const pitchObject = {
             category: "Pitch Matching",
-            value: 65,
+            value: Math.round(freq),
             fullMark: 100 
         }
 
@@ -181,13 +169,13 @@ class results extends Component {
 
         const phonemeAccuracyObject = {
             category: "Phoneme Matching",
-            value: 80,
+            value: Math.round(phonemes),
             fullMark: 100 
         }
         
         const timingObject = {
             category: "Timing Matching",
-            value: 30,
+            value: Math.round(timing),
             fullMark: 100 
         }
 
@@ -195,10 +183,15 @@ class results extends Component {
         return dataArray;
     }
 
+    generateScore = (freq, timing, phonemes) => {
+        return ((freq + timing + phonemes)/3).toFixed(2);
+    }
+
     render() {
     const isLoading = this.state.isLoading
     const freqGraphData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
-    const compareGraphData = this.getCompareData(this.state.frequencies, [])
+    const compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
+    const lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
     return(
         <Layout>
         <Fonts/>
@@ -221,8 +214,7 @@ class results extends Component {
                                 <Card style={scoreCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Lorro Score </Typography>
-                                        <Typography variant="body"> WIP - dummy data </Typography>
-                                        <Typography variant="h2" style={{fontFamily:'Merienda', fontSize:'15vmax', color:'#8884d8'}}> 76 </Typography>
+                                        <Typography variant="h2" style={{fontFamily:'Merienda', fontSize:'15vmax', color:'#8884d8'}}> {lorroScore} </Typography>
                                     </CardContent>
                                 </Card>
                                 
@@ -251,7 +243,6 @@ class results extends Component {
                                 <Card style={sampleCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Comparision to Sample </Typography>
-                                        <Typography variant="body" gutterBottom> WIP - Dummy Data </Typography>
                                         <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                                         <RadarChart data={compareGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                             <PolarGrid />
