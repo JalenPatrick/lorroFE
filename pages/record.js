@@ -25,6 +25,7 @@ import { recording } from '../scripts/record-script';
 import { saveAs } from 'file-saver';
 
 import { createHashHistory } from 'history'
+import Particles from 'react-particles-js';
 
 
 
