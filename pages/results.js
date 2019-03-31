@@ -15,6 +15,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import Particles from 'react-particles-js';
+
 import Fonts from '../components/Fonts'
 import { 
     AreaChart,
@@ -55,11 +57,17 @@ const scoreCard = {
     // width: "50%"
 }
 
+const targetCard = {
+    border: "5px solid #81C784",
+    borderRadius: "5px",
+    margin: "5vh 0 5vh 0",
+    // width: "50%"
+}
+
 const loadingStyle = {
     textAlign: "center",
-    marginTop:'-10',
-    backgroundColor: "#e0e0e0",
-    height: '100vh'
+    backgroundColor: "#475372",
+    height: 'auto'
 }
 
 const displayStyle = {
@@ -91,6 +99,7 @@ class results extends Component {
         // console.log(this.props)
         // console.log(window.location.search)
         const process_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/process"
+        const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
         
         // get file name from query param
         const test = new URLSearchParams(window.location.search)
@@ -107,7 +116,7 @@ class results extends Component {
         const stringfied = JSON.stringify(sendObj)
         console.log('results', JSON.stringify(sendObj))
 
-        let transcribe
+        let transcribe;
         
         // get info from backend and take what we need
         await axios.post(process_url, stringfied).then(response => {
@@ -116,6 +125,9 @@ class results extends Component {
             const sampleData = response.data.sample_data
             const targetData = response.data.target_data
             const res = response.data
+
+            // this is the key used to transcribe the words the user said
+            transcribe = response.data.transcribe
 
             this.setState({
                 isLoading: false,
@@ -130,7 +142,10 @@ class results extends Component {
                 wordCompare: res.compare_transcribe,
                 freqScore: res.freq_diff_score,
                 ppAccuracyScore: res.postprocessed_accuracy_score,
-                rawAccuracyScore: res.raw_accuracy_score
+                rawAccuracyScore: res.raw_accuracy_score,
+                displaySample: true,
+                transcribe: res.transcribe,
+                transcribeDone: false,
             })
             console.log(this.state)
         })
@@ -212,6 +227,58 @@ class results extends Component {
         console.log(target_url);
     }
 
+    toggleData = () => {
+        const newDataShow = !this.state.displaySample;
+        this.setState({displaySample: newDataShow});
+    }
+
+    // getTranscribe = () => {
+    //     const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
+    //     const transcribe = this.state.transcribe
+    //     let result_url;
+    //     console.log(this.state.transcribeDone)
+    //     if (!this.state.transcribeDone) {
+    //         axios.post(transcribe_url, transcribe).then(response => {
+    //             console.log('transcribe res: ', response);
+    //             if (response.data.status === 'COMPLETED') {
+    //                 result_url = response.data.result;
+    //                 console.log('done transcribe!', result_url)
+    //                 this.setState({transcribeDone: true})
+    //                 console.log(this.state.transcribeDone)
+    //             }
+    //         })
+    //     }
+        
+    //     setTimeout(this.getTranscribe, 8000);
+    //     return result_url
+    // }
+    
+    
+
+    // getTranscribe = (transcribe_url) => {
+    //     let status = false;
+    //     let result_url;
+
+    //     console.log(transcribe_url);
+        
+    //     // while(!status) {
+    //     //     const d = new Date();
+    //     //     let currentTime = d.getTime();
+    //     //     if (currentTime % 2000 === 0) {
+    //     //         console.log('2 sec')
+    //     //     }
+            
+    //         // await axios.post(transcribe_url, transcribe).then(response => {
+    //         //     console.log('transcribe res: ', response);
+    //         //     if (response.data.status === 'COMPLETED') {
+    //         //         status = true;
+    //         //         result_url = response.data.result;
+    //         //         console.log('done transcribe!')
+    //         //     }
+    //         // })
+    //     }
+    // }
+
     render() {
     const isLoading = this.state.isLoading
     const freqSampleData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
@@ -219,6 +286,14 @@ class results extends Component {
     const compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
     const wordMatching = this.wordMatching(this.state.wordCompare);
     const lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
+
+    let transcribe_link;
+    // if (!this.state.transcribeDone) {
+    //     transcribe_link = this.getTranscribe()
+    // }
+
+    console.log(transcribe_link)
+    
     
     const test = new URLSearchParams(window.location.search)
     const tar = test.get('target');
@@ -229,6 +304,13 @@ class results extends Component {
     const target_url = 'https://s3.us-east-2.amazonaws.com/lorro/' + tar + '.wav';
     const sample_url = 'https://s3.us-east-2.amazonaws.com/lorro/' + file;
     // console.log(sample_url, target_url)
+    
+    let dataToShow;
+    if (this.state.displaySample) {
+        dataToShow = freqSampleData;
+    } else {
+        dataToShow = freqTargetData;
+    }
 
 
     return(
@@ -238,8 +320,22 @@ class results extends Component {
                 <Paper elevation={"1"}>
                     <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
                         <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
-                            <Typography variant="h2" gutterBottom style={{color:'black', fontFamily:'Merienda', fontSize: '7vmax'}}> Analyzing Your Speech Sample... </Typography>
-                            <LinearProgress style={{flexGrow:1}}/> 
+                            <Typography variant="h2" gutterBottom style={{color:'white', fontFamily:'Merienda', fontSize: '7vmax', marginTop: '20px'}}> Analyzing Your Speech Sample... </Typography>
+                            <LinearProgress style={{flexGrow:1}}/>
+                        </Grid>
+
+                        <Grid item xs={12} md={12}>
+                            <Particles
+                                params={{
+                                    "particles": {
+                                        "number": {
+                                            "value": 50
+                                        },
+                                        "size": {
+                                            "value": 5
+                                        }
+                                    }
+                                }} />
                         </Grid>
                     </Grid>
                 </Paper>
@@ -255,13 +351,89 @@ class results extends Component {
                                         <Typography variant="h2" style={{fontFamily:'Merienda', fontSize:'15vmax', color:'#8884d8'}}> {lorroScore} </Typography>
                                     </CardContent>
                                 </Card>
-                                
-                                {/* Recorded Sample */}
+                                {/* Toggle Samples */}
                                 <Card style={sampleCard}>
                                     <CardContent>
-                                        <Typography variant="h2" gutterBottom> Sample Frequencies </Typography>
+                                        <Typography variant="h2" gutterBottom> Frequency Profile </Typography>
                                         {/* <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
                                         <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography> */}
+                                        <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
+                                        <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
+                                        <ResponsiveContainer width='100%' aspect={4.0/2.0}>
+                                        {this.state.displaySample ? (
+                                            <AreaChart data={dataToShow} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="phoneme">
+                                                    <Label value="Detected Phoneme" offset={10} position="bottom" />
+                                                </XAxis>
+                                                <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
+                                                <Tooltip />
+                                                <Area type="monotone" dataKey="freq" stroke="#8884d8" fill="#8884d8" unit="hz" activeDot={{ r: 8 }} />
+                                                <Area type="monotone" dataKey="note" stroke="#8884d8" dot={false} />
+                                            </AreaChart>
+                                        ) : (
+                                            <AreaChart data={dataToShow} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="phoneme">
+                                                    <Label value="Detected Phoneme" offset={10} position="bottom" />
+                                                </XAxis>
+                                                <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
+                                                <Tooltip />
+                                                <Area type="monotone" dataKey="freq" stroke="#81C784" fill="#81C784" unit="hz" activeDot={{ r: 8 }} />
+                                                <Area type="monotone" dataKey="note" stroke="#81C784" dot={false} />
+                                            </AreaChart>
+                                        )}
+                                        </ResponsiveContainer>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => this.toggleData()}
+                                        > {this.state.displaySample ? 'View Sample Graph' : 'View Target Graph'} </Button>
+                                        <Grid container spacing={24} direction="row" justifyContent="center" alignItems="center" justify="center">
+                                            <Grid item xs={12} md={6}>
+                                                <Card style={scoreCard}>
+                                                    <CardContent>
+                                                        <Typography variant="h3" gutterBottom> Sample Breakdown </Typography>
+                                                        <Typography variant="h5" gutterBottom> Speech Transcription </Typography>
+                                                        {/* this would need to be the result of transcription */}
+                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#81C784'}}> {wordMatching} </Typography>
+                                                        <Typography variant="h5"> Processed Phonemes: </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#8884d8'}}> {this.state.segmentedPhonemes} </Typography>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={() => this.playTarget(sample_url)}
+                                                        > Play Sample </Button>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs={12} md={6}>
+                                                <Card style={targetCard}>
+                                                    <CardContent>
+                                                        <Typography variant="h3" gutterBottom> Target Breakdown </Typography>
+                                                        <Typography variant="h5"> Speech Transcription </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#81C784'}}> {wordMatching} </Typography>
+                                                        <Typography variant="h5"> Processed Phonemes </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 20px 0px', color: '#81C784'}}> {this.state.t_segmentedPhonemes} </Typography>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={() => this.playTarget(target_url)}
+                                                        > Play Target </Button>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+
+                                
+                                {/* Recorded Sample */}
+                                {/* <Card style={sampleCard}>
+                                    <CardContent>
+                                        <Typography variant="h2" gutterBottom> Sample Frequencies </Typography>
+                                        <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
+                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography>
                                         <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
                                         <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
                                         <ResponsiveContainer width='100%' aspect={4.0/2.0}>
@@ -284,14 +456,14 @@ class results extends Component {
                                         <Typography variant="subtitle" style={{margin: '20px 0px 0px 0px'}}> Here's what we think you said: </Typography>
                                         <Typography variant="h6" style={{margin: '20px 0px 0px 0px', color: '#8884d8'}}> {wordMatching} </Typography>
                                     </CardContent>
-                                </Card>
+                                </Card> */}
 
                                 {/* Target Sample */}
-                                <Card style={sampleCard}>
+                                {/* <Card style={sampleCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Target Frequencies </Typography>
-                                        {/* <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
-                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography> */}
+                                        <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
+                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography>
                                         <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
                                         <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
                                         <ResponsiveContainer width='100%' aspect={4.0/2.0}>
@@ -312,7 +484,7 @@ class results extends Component {
                                             onClick={() => this.playTarget(target_url)}
                                         > Play Target </Button>
                                     </CardContent>
-                                </Card>
+                                </Card> */}
 
                                 
                                 <Card style={sampleCard}>

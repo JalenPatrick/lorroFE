@@ -22,6 +22,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Radio from '@material-ui/core/Radio';
+import Particles from 'react-particles-js';
 
 
 const styles = {
@@ -42,7 +43,7 @@ const pageStyles = {
 const loadingStyle = {
     textAlign: "center",
     marginTop:'-10',
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#475372",
     height: '100vh'
 }
 
@@ -273,13 +274,26 @@ class upload extends Component {
                         </Grid>
                     </Grid>
                         ) : (
-                        <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
-                            <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
-                                {/* https://s3.us-east-2.amazonaws.com/lorro/5f52814c-4865-11e9-8577-eb571fcec879.wav */}
-                                <Typography variant="h2" gutterBottom style={{color:'black', fontFamily:'Merienda', fontSize: '7vmax'}}> Uploading Your Speech Sample... </Typography>
-                                <LinearProgress style={{flexGrow:1}}/> 
+                            <Grid container spacing={24} style={loadingStyle} direction="row" justifyContent="center" alignItems="center" justify="center">
+                                <Grid item xs={12} md={12} style={{padding:"0 30px 0 30px"}}>
+                                    <Typography variant="h2" gutterBottom style={{color:'white', fontFamily:'Merienda', fontSize: '7vmax', marginTop: '20px'}}> Uploading Your Speech Sample... </Typography>
+                                    <LinearProgress style={{flexGrow:1}}/>
+                                </Grid>
+        
+                                <Grid item xs={12} md={12}>
+                                    <Particles
+                                        params={{
+                                            "particles": {
+                                                "number": {
+                                                    "value": 50
+                                                },
+                                                "size": {
+                                                    "value": 5
+                                                }
+                                            }
+                                        }} />
+                                </Grid>
                             </Grid>
-                        </Grid> 
                     )}
             </Paper>
         </Layout>  
