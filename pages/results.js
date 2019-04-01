@@ -114,14 +114,14 @@ class results extends Component {
         }
 
         const stringfied = JSON.stringify(sendObj)
-        console.log('results', JSON.stringify(sendObj))
+        // console.log('results', JSON.stringify(sendObj))
 
         let transcribe;
         
         // get info from backend and take what we need
         await axios.post(process_url, stringfied).then(response => {
-            console.log('result -', response)
-            console.log('post success - result')
+            // console.log('result -', response)
+            // console.log('post success - result')
             const sampleData = response.data.sample_data
             const targetData = response.data.target_data
             const res = response.data
@@ -146,15 +146,18 @@ class results extends Component {
                 displaySample: true,
                 transcribe: res.transcribe,
                 transcribeDone: false,
+                transcribeHere: null,
+                transcribeTextSample: null,
+                getTranscribeDone: false
             })
-            console.log(this.state)
+            // console.log(this.state)
         })
     }
 
     getFreqData = (freqArray, phonemeArray, notesArray) => {
-        console.log(freqArray)
-        console.log(phonemeArray)
-        console.log(notesArray)
+        // console.log(freqArray)
+        // console.log(phonemeArray)
+        // console.log(notesArray)
         let dataArray = []
 
         if (freqArray && phonemeArray && notesArray)
@@ -166,7 +169,7 @@ class results extends Component {
                 }
                 dataArray.push(dataObject)
             }
-        console.log(dataArray)
+        // console.log(dataArray)
         if (dataArray) {
             return dataArray;
         } else {
@@ -180,18 +183,28 @@ class results extends Component {
     // 1. Pitch --> average spoken word frequency over the sample
     // 2. Word Accuracy --> how correct the words are (use confidence from AWS)
     // 3. Timing --> raw duration of the samples
-    getCompareData = (freq, timing, phonemes) => {
+    getCompareData = (freq, timing, phonemes, words) => {
         const pitchObject = {
             category: "Pitch Matching",
             value: Math.round(freq),
             fullMark: 100 
         }
 
-        const wordAccuracyObject = {
-            category: "Word Matching",
-            value: 90,
-            fullMark: 100 
+        let wordAccuracyObject
+        if (!words) {
+            wordAccuracyObject = {
+                category: "Word Matching",
+                value: 0,
+                fullMark: 100 
+            }
+        } else {
+            wordAccuracyObject = {
+                category: "Word Matching",
+                value: Math.round(words * 100),
+                fullMark: 100 
+            }
         }
+        
 
         const phonemeAccuracyObject = {
             category: "Phoneme Matching",
@@ -210,13 +223,21 @@ class results extends Component {
     }
 
     generateScore = (freq, timing, phonemes) => {
+        // console.log('gen score', ((freq + timing + phonemes + 90)/4).toFixed(2))
         return ((freq + timing + phonemes + 90)/4).toFixed(2);
+    }
+
+    generateScore2 = (freq, timing, phonemes, words) => {
+        // console.log('gs2', freq, timing, phonemes, words)
+        // console.log('gen score 2', ((freq + timing + phonemes + words * 100)/4).toFixed(2))
+        return ((freq + timing + phonemes + words * 100)/4).toFixed(2);
     }
 
     wordMatching = (raw) => {
         if (raw) {
             const parsed = JSON.parse(raw);
             const interpreted = parsed.results.transcripts[0].transcript;
+            // this.setState({transcribeTextTarget: interpreted})
             return interpreted;
         }     
     }
@@ -224,7 +245,7 @@ class results extends Component {
     playTarget = (target_url) => {
         const audio = new Audio(target_url);
         audio.play();
-        console.log(target_url);
+        // console.log(target_url);
     }
 
     toggleData = () => {
@@ -232,69 +253,90 @@ class results extends Component {
         this.setState({displaySample: newDataShow});
     }
 
-    // getTranscribe = () => {
-    //     const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
-    //     const transcribe = this.state.transcribe
-    //     let result_url;
-    //     console.log(this.state.transcribeDone)
-    //     if (!this.state.transcribeDone) {
-    //         axios.post(transcribe_url, transcribe).then(response => {
-    //             console.log('transcribe res: ', response);
-    //             if (response.data.status === 'COMPLETED') {
-    //                 result_url = response.data.result;
-    //                 console.log('done transcribe!', result_url)
-    //                 this.setState({transcribeDone: true})
-    //                 console.log(this.state.transcribeDone)
-    //             }
-    //         })
-    //     }
+    postTranscribe = () => {
+        const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
+        const transcribe = this.state.transcribe
+        let result_url;
+        // console.log(this.state.transcribeDone)
+        if (!this.state.transcribeDone) {
+            axios.post(transcribe_url, transcribe).then(response => {
+                // console.log('transcribe res: ', response);
+                if (response.data.status === 'COMPLETED') {
+                    result_url = response.data.result;
+                    // console.log('done transcribe!', result_url)
+                    this.setState({transcribeDone: true, transcribeHere: result_url})
+                    // console.log('post call state', this.state)
+                }
+            })
+        }
         
-    //     setTimeout(this.getTranscribe, 8000);
-    //     return result_url
-    // }
+        setTimeout(this.postTranscribe, 8000);
+        return result_url
+    }
     
-    
+    getTranscribe = (trans_url) => {
+        // console.log('get transcribe', trans_url);
+        if(!this.state.getTranscribeDone) {
+            axios.get(trans_url).then(response => {
+                // console.log(response)
+                let result = response.data.results.transcripts[0].transcript;
+                // console.log(result)
 
-    // getTranscribe = (transcribe_url) => {
-    //     let status = false;
-    //     let result_url;
+                this.setState({transcribeTextSample: result, getTranscribeDone: true})
 
-    //     console.log(transcribe_url);
-        
-    //     // while(!status) {
-    //     //     const d = new Date();
-    //     //     let currentTime = d.getTime();
-    //     //     if (currentTime % 2000 === 0) {
-    //     //         console.log('2 sec')
-    //     //     }
-            
-    //         // await axios.post(transcribe_url, transcribe).then(response => {
-    //         //     console.log('transcribe res: ', response);
-    //         //     if (response.data.status === 'COMPLETED') {
-    //         //         status = true;
-    //         //         result_url = response.data.result;
-    //         //         console.log('done transcribe!')
-    //         //     }
-    //         // })
-    //     }
-    // }
+                // console.log('after getTranscribe', this.state)
+                return result
+            })
+        }
+    }
+
+    matchingWords = (targetWords, sampleWords) => {
+        // console.log('matching words')
+        // console.log(targetWords, sampleWords)
+        if (this.state.transcribeTextSample) {
+            const sampleArray = (this.state.transcribeTextSample).split(' ');
+            const targetArray = (targetWords).split(' ');
+            // console.log(sampleArray, targetArray)
+            const intersect = targetArray.filter(value => sampleArray.includes(value))
+            // console.log(intersect.length, targetArray.length)
+            return (intersect.length / targetArray.length)
+        }
+    }
 
     render() {
     const isLoading = this.state.isLoading
     const freqSampleData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
     const freqTargetData = this.getFreqData(this.state.t_frequencies, this.state.t_rawPhonemes, this.state.t_noteProgression)
-    const compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
     const wordMatching = this.wordMatching(this.state.wordCompare);
     const lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
+    let compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, 0)
 
     let transcribe_link;
-    // if (!this.state.transcribeDone) {
-    //     transcribe_link = this.getTranscribe()
-    // }
+    let transcribe_result = null;
+    let determineWords = null;
 
-    console.log(transcribe_link)
+    if (!this.state.transcribeDone) {
+        transcribe_link = this.postTranscribe()
+    }
     
-    
+
+    let lorroScoreRedux = null;
+    if (this.state.transcribeTextSample === null) {
+        // console.log('got into inner')
+        // console.log(wordMatching, 'in inner')
+        transcribe_result = this.getTranscribe(this.state.transcribeHere)
+        // console.log(transcribe_result, 'transcribe result')
+    }
+
+    determineWords = this.matchingWords(wordMatching, this.state.transcribeTextSample);
+    lorroScoreRedux = this.generateScore2(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
+    compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
+    // console.log(transcribe_result, determineWords, lorroScoreRedux)
+
+    // compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
+
+    // console.log(determineWords)
+
     const test = new URLSearchParams(window.location.search)
     const tar = test.get('target');
     const file = test.get('file');
@@ -348,7 +390,8 @@ class results extends Component {
                                 <Card style={scoreCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Lorro Score </Typography>
-                                        <Typography variant="h2" style={{fontFamily:'Merienda', fontSize:'15vmax', color:'#8884d8'}}> {lorroScore} </Typography>
+                                        <Typography variant="h2" style={{fontFamily:'Merienda', fontSize:'15vmax', color:'#8884d8'}}> {(isNaN(lorroScoreRedux)) ? lorroScore : lorroScoreRedux} </Typography>
+                                        <Typography variant="h5" style={{fontFamily:'Merienda', color:'#8884d8'}}> {(isNaN(lorroScoreRedux)) ? "Awaiting word transcription..." : "With word transcription!"} </Typography>
                                     </CardContent>
                                 </Card>
                                 {/* Toggle Samples */}
@@ -396,9 +439,9 @@ class results extends Component {
                                                         <Typography variant="h3" gutterBottom> Sample Breakdown </Typography>
                                                         <Typography variant="h5" gutterBottom> Speech Transcription </Typography>
                                                         {/* this would need to be the result of transcription */}
-                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#81C784'}}> {wordMatching} </Typography>
-                                                        <Typography variant="h5"> Processed Phonemes: </Typography>
-                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#8884d8'}}> {this.state.segmentedPhonemes} </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#8884d8', overflowWrap: "break-word", wordWrap: "break-word"}}> {(this.state.transcribeTextSample !== null) ? this.state.transcribeTextSample : 'Processing...'} </Typography>
+                                                        <Typography variant="h5"> Processed Phonemes </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#8884d8', overflowWrap: "break-word", wordWrap: "break-word"}}> {this.state.segmentedPhonemes} </Typography>
                                                         <Button
                                                             variant="contained"
                                                             color="primary"
@@ -412,9 +455,9 @@ class results extends Component {
                                                     <CardContent>
                                                         <Typography variant="h3" gutterBottom> Target Breakdown </Typography>
                                                         <Typography variant="h5"> Speech Transcription </Typography>
-                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#81C784'}}> {wordMatching} </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 10px 0px', color: '#81C784', overflowWrap: "break-word", wordWrap: "break-word"}}> {wordMatching} </Typography>
                                                         <Typography variant="h5"> Processed Phonemes </Typography>
-                                                        <Typography variant="h5" style={{margin: '0px 0px 20px 0px', color: '#81C784'}}> {this.state.t_segmentedPhonemes} </Typography>
+                                                        <Typography variant="h5" style={{margin: '0px 0px 20px 0px', color: '#81C784', overflowWrap: "break-word", wordWrap: "break-word"}}> {this.state.t_segmentedPhonemes} </Typography>
                                                         <Button
                                                             variant="contained"
                                                             color="primary"
@@ -489,7 +532,8 @@ class results extends Component {
                                 
                                 <Card style={sampleCard}>
                                     <CardContent>
-                                        <Typography variant="h2" gutterBottom> Comparision to Sample </Typography>
+                                        <Typography variant="h2" gutterBottom> Lorro Score Breakdown </Typography>
+                                        <Typography variant="h5" gutterBottom> {(this.state.transcribeTextSample !== null) ? 'Complete Lorro score breakdown complete!' : 'Processing word matching accuracy...'} </Typography>
                                         <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                                         <RadarChart data={compareGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                             <PolarGrid />

@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -478,9 +478,9 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(results).call(this));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getFreqData", function (freqArray, phonemeArray, notesArray) {
-      console.log(freqArray);
-      console.log(phonemeArray);
-      console.log(notesArray);
+      // console.log(freqArray)
+      // console.log(phonemeArray)
+      // console.log(notesArray)
       var dataArray = [];
       if (freqArray && phonemeArray && notesArray) for (var i = 0; i < freqArray.length; i++) {
         var dataObject = {
@@ -489,8 +489,7 @@ function (_Component) {
           note: notesArray[i]
         };
         dataArray.push(dataObject);
-      }
-      console.log(dataArray);
+      } // console.log(dataArray)
 
       if (dataArray) {
         return dataArray;
@@ -499,17 +498,28 @@ function (_Component) {
       }
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getCompareData", function (freq, timing, phonemes) {
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getCompareData", function (freq, timing, phonemes, words) {
       var pitchObject = {
         category: "Pitch Matching",
         value: Math.round(freq),
         fullMark: 100
       };
-      var wordAccuracyObject = {
-        category: "Word Matching",
-        value: 90,
-        fullMark: 100
-      };
+      var wordAccuracyObject;
+
+      if (!words) {
+        wordAccuracyObject = {
+          category: "Word Matching",
+          value: 0,
+          fullMark: 100
+        };
+      } else {
+        wordAccuracyObject = {
+          category: "Word Matching",
+          value: Math.round(words * 100),
+          fullMark: 100
+        };
+      }
+
       var phonemeAccuracyObject = {
         category: "Phoneme Matching",
         value: Math.round(phonemes),
@@ -525,21 +535,28 @@ function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "generateScore", function (freq, timing, phonemes) {
+      // console.log('gen score', ((freq + timing + phonemes + 90)/4).toFixed(2))
       return ((freq + timing + phonemes + 90) / 4).toFixed(2);
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "generateScore2", function (freq, timing, phonemes, words) {
+      // console.log('gs2', freq, timing, phonemes, words)
+      // console.log('gen score 2', ((freq + timing + phonemes + words * 100)/4).toFixed(2))
+      return ((freq + timing + phonemes + words * 100) / 4).toFixed(2);
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "wordMatching", function (raw) {
       if (raw) {
         var parsed = JSON.parse(raw);
-        var interpreted = parsed.results.transcripts[0].transcript;
+        var interpreted = parsed.results.transcripts[0].transcript; // this.setState({transcribeTextTarget: interpreted})
+
         return interpreted;
       }
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "playTarget", function (target_url) {
       var audio = new Audio(target_url);
-      audio.play();
-      console.log(target_url);
+      audio.play(); // console.log(target_url);
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleData", function () {
@@ -548,6 +565,64 @@ function (_Component) {
       _this.setState({
         displaySample: newDataShow
       });
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "postTranscribe", function () {
+      var transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe";
+      var transcribe = _this.state.transcribe;
+      var result_url; // console.log(this.state.transcribeDone)
+
+      if (!_this.state.transcribeDone) {
+        axios__WEBPACK_IMPORTED_MODULE_21___default.a.post(transcribe_url, transcribe).then(function (response) {
+          // console.log('transcribe res: ', response);
+          if (response.data.status === 'COMPLETED') {
+            result_url = response.data.result; // console.log('done transcribe!', result_url)
+
+            _this.setState({
+              transcribeDone: true,
+              transcribeHere: result_url
+            }); // console.log('post call state', this.state)
+
+          }
+        });
+      }
+
+      setTimeout(_this.postTranscribe, 8000);
+      return result_url;
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getTranscribe", function (trans_url) {
+      // console.log('get transcribe', trans_url);
+      if (!_this.state.getTranscribeDone) {
+        axios__WEBPACK_IMPORTED_MODULE_21___default.a.get(trans_url).then(function (response) {
+          // console.log(response)
+          var result = response.data.results.transcripts[0].transcript; // console.log(result)
+
+          _this.setState({
+            transcribeTextSample: result,
+            getTranscribeDone: true
+          }); // console.log('after getTranscribe', this.state)
+
+
+          return result;
+        });
+      }
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "matchingWords", function (targetWords, sampleWords) {
+      // console.log('matching words')
+      // console.log(targetWords, sampleWords)
+      if (_this.state.transcribeTextSample) {
+        var sampleArray = _this.state.transcribeTextSample.split(' ');
+
+        var targetArray = targetWords.split(' '); // console.log(sampleArray, targetArray)
+
+        var intersect = targetArray.filter(function (value) {
+          return sampleArray.includes(value);
+        }); // console.log(intersect.length, targetArray.length)
+
+        return intersect.length / targetArray.length;
+      }
     });
 
     _this.state = {
@@ -589,12 +664,12 @@ function (_Component) {
                   file: file,
                   target: tar
                 };
-                stringfied = JSON.stringify(sendObj);
-                console.log('results', JSON.stringify(sendObj));
-                _context.next = 11;
+                stringfied = JSON.stringify(sendObj); // console.log('results', JSON.stringify(sendObj))
+
+                _context.next = 10;
                 return axios__WEBPACK_IMPORTED_MODULE_21___default.a.post(process_url, stringfied).then(function (response) {
-                  console.log('result -', response);
-                  console.log('post success - result');
+                  // console.log('result -', response)
+                  // console.log('post success - result')
                   var sampleData = response.data.sample_data;
                   var targetData = response.data.target_data;
                   var res = response.data; // this is the key used to transcribe the words the user said
@@ -617,13 +692,15 @@ function (_Component) {
                     rawAccuracyScore: res.raw_accuracy_score,
                     displaySample: true,
                     transcribe: res.transcribe,
-                    transcribeDone: false
-                  });
+                    transcribeDone: false,
+                    transcribeHere: null,
+                    transcribeTextSample: null,
+                    getTranscribeDone: false
+                  }); // console.log(this.state)
 
-                  console.log(_this2.state);
                 });
 
-              case 11:
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -637,59 +714,37 @@ function (_Component) {
     }()
   }, {
     key: "render",
-    // getTranscribe = () => {
-    //     const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
-    //     const transcribe = this.state.transcribe
-    //     let result_url;
-    //     console.log(this.state.transcribeDone)
-    //     if (!this.state.transcribeDone) {
-    //         axios.post(transcribe_url, transcribe).then(response => {
-    //             console.log('transcribe res: ', response);
-    //             if (response.data.status === 'COMPLETED') {
-    //                 result_url = response.data.result;
-    //                 console.log('done transcribe!', result_url)
-    //                 this.setState({transcribeDone: true})
-    //                 console.log(this.state.transcribeDone)
-    //             }
-    //         })
-    //     }
-    //     setTimeout(this.getTranscribe, 8000);
-    //     return result_url
-    // }
-    // getTranscribe = (transcribe_url) => {
-    //     let status = false;
-    //     let result_url;
-    //     console.log(transcribe_url);
-    //     // while(!status) {
-    //     //     const d = new Date();
-    //     //     let currentTime = d.getTime();
-    //     //     if (currentTime % 2000 === 0) {
-    //     //         console.log('2 sec')
-    //     //     }
-    //         // await axios.post(transcribe_url, transcribe).then(response => {
-    //         //     console.log('transcribe res: ', response);
-    //         //     if (response.data.status === 'COMPLETED') {
-    //         //         status = true;
-    //         //         result_url = response.data.result;
-    //         //         console.log('done transcribe!')
-    //         //     }
-    //         // })
-    //     }
-    // }
     value: function render() {
       var _this3 = this;
 
       var isLoading = this.state.isLoading;
       var freqSampleData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression);
       var freqTargetData = this.getFreqData(this.state.t_frequencies, this.state.t_rawPhonemes, this.state.t_noteProgression);
-      var compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore);
       var wordMatching = this.wordMatching(this.state.wordCompare);
       var lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore);
-      var transcribe_link; // if (!this.state.transcribeDone) {
-      //     transcribe_link = this.getTranscribe()
-      // }
+      var compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, 0);
+      var transcribe_link;
+      var transcribe_result = null;
+      var determineWords = null;
 
-      console.log(transcribe_link);
+      if (!this.state.transcribeDone) {
+        transcribe_link = this.postTranscribe();
+      }
+
+      var lorroScoreRedux = null;
+
+      if (this.state.transcribeTextSample === null) {
+        // console.log('got into inner')
+        // console.log(wordMatching, 'in inner')
+        transcribe_result = this.getTranscribe(this.state.transcribeHere); // console.log(transcribe_result, 'transcribe result')
+      }
+
+      determineWords = this.matchingWords(wordMatching, this.state.transcribeTextSample);
+      lorroScoreRedux = this.generateScore2(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords);
+      compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords); // console.log(transcribe_result, determineWords, lorroScoreRedux)
+      // compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
+      // console.log(determineWords)
+
       var test = new URLSearchParams(window.location.search);
       var tar = test.get('target');
       var file = test.get('file'); // console.log(tar, file);
@@ -708,20 +763,20 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Layout__WEBPACK_IMPORTED_MODULE_4__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 317
+          lineNumber: 359
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Fonts__WEBPACK_IMPORTED_MODULE_18__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 318
+          lineNumber: 360
         },
         __self: this
       }), isLoading ? react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2___default.a, {
         elevation: "1",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 320
+          lineNumber: 362
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -734,7 +789,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 321
+          lineNumber: 363
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -746,7 +801,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 322
+          lineNumber: 364
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -760,7 +815,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 323
+          lineNumber: 365
         },
         __self: this
       }, " Analyzing Your Speech Sample... "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_LinearProgress__WEBPACK_IMPORTED_MODULE_11___default.a, {
@@ -769,7 +824,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 324
+          lineNumber: 366
         },
         __self: this
       })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -778,7 +833,7 @@ function (_Component) {
         md: 12,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 327
+          lineNumber: 369
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_particles_js__WEBPACK_IMPORTED_MODULE_17___default.a, {
@@ -794,14 +849,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 328
+          lineNumber: 370
         },
         __self: this
       })))) : react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2___default.a, {
         elevation: "1",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 343
+          lineNumber: 385
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -813,7 +868,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 344
+          lineNumber: 386
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -826,7 +881,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 345
+          lineNumber: 387
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -838,20 +893,20 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 347
+          lineNumber: 389
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: scoreCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 348
+          lineNumber: 390
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 349
+          lineNumber: 391
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -859,7 +914,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 350
+          lineNumber: 392
         },
         __self: this
       }, " Lorro Score "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -871,20 +926,31 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 351
+          lineNumber: 393
         },
         __self: this
-      }, " ", lorroScore, " "))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
+      }, " ", isNaN(lorroScoreRedux) ? lorroScore : lorroScoreRedux, " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h5",
+        style: {
+          fontFamily: 'Merienda',
+          color: '#8884d8'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 394
+        },
+        __self: this
+      }, " ", isNaN(lorroScoreRedux) ? "Awaiting word transcription..." : "With word transcription!", " "))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: sampleCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 355
+          lineNumber: 398
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 356
+          lineNumber: 399
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -892,7 +958,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 357
+          lineNumber: 400
         },
         __self: this
       }, " Frequency Profile "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -900,14 +966,14 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 360
+          lineNumber: 403
         },
         __self: this
       }, " Fundamental frequencies vs. spoken phoneme "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 361
+          lineNumber: 404
         },
         __self: this
       }, " Hover over the chart to see the phoneme spoken and what pitch it was spoken at "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["ResponsiveContainer"], {
@@ -915,7 +981,7 @@ function (_Component) {
         aspect: 4.0 / 2.0,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 362
+          lineNumber: 405
         },
         __self: this
       }, this.state.displaySample ? react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["AreaChart"], {
@@ -928,21 +994,21 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 364
+          lineNumber: 407
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["CartesianGrid"], {
         strokeDasharray: "3 3",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 365
+          lineNumber: 408
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["XAxis"], {
         dataKey: "phoneme",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 366
+          lineNumber: 409
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Label"], {
@@ -951,7 +1017,7 @@ function (_Component) {
         position: "bottom",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 367
+          lineNumber: 410
         },
         __self: this
       })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["YAxis"], {
@@ -962,13 +1028,13 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 369
+          lineNumber: 412
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Tooltip"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 370
+          lineNumber: 413
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Area"], {
@@ -982,7 +1048,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 371
+          lineNumber: 414
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Area"], {
@@ -992,7 +1058,7 @@ function (_Component) {
         dot: false,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 372
+          lineNumber: 415
         },
         __self: this
       })) : react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["AreaChart"], {
@@ -1005,21 +1071,21 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 375
+          lineNumber: 418
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["CartesianGrid"], {
         strokeDasharray: "3 3",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 376
+          lineNumber: 419
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["XAxis"], {
         dataKey: "phoneme",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 377
+          lineNumber: 420
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Label"], {
@@ -1028,7 +1094,7 @@ function (_Component) {
         position: "bottom",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 378
+          lineNumber: 421
         },
         __self: this
       })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["YAxis"], {
@@ -1039,13 +1105,13 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 380
+          lineNumber: 423
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Tooltip"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 381
+          lineNumber: 424
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Area"], {
@@ -1059,7 +1125,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 382
+          lineNumber: 425
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Area"], {
@@ -1069,7 +1135,7 @@ function (_Component) {
         dot: false,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 383
+          lineNumber: 426
         },
         __self: this
       }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
@@ -1080,7 +1146,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 387
+          lineNumber: 430
         },
         __self: this
       }, " ", this.state.displaySample ? 'View Sample Graph' : 'View Target Graph', " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1092,7 +1158,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 392
+          lineNumber: 435
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1101,20 +1167,20 @@ function (_Component) {
         md: 6,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 393
+          lineNumber: 436
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: scoreCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 394
+          lineNumber: 437
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 395
+          lineNumber: 438
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1122,7 +1188,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 396
+          lineNumber: 439
         },
         __self: this
       }, " Sample Breakdown "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1130,36 +1196,40 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 397
+          lineNumber: 440
         },
         __self: this
       }, " Speech Transcription "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         style: {
           margin: '0px 0px 10px 0px',
-          color: '#81C784'
+          color: '#8884d8',
+          overflowWrap: "break-word",
+          wordWrap: "break-word"
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 399
+          lineNumber: 442
         },
         __self: this
-      }, " ", wordMatching, " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+      }, " ", this.state.transcribeTextSample !== null ? this.state.transcribeTextSample : 'Processing...', " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 400
+          lineNumber: 443
         },
         __self: this
-      }, " Processed Phonemes: "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+      }, " Processed Phonemes "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         style: {
           margin: '0px 0px 10px 0px',
-          color: '#8884d8'
+          color: '#8884d8',
+          overflowWrap: "break-word",
+          wordWrap: "break-word"
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 401
+          lineNumber: 444
         },
         __self: this
       }, " ", this.state.segmentedPhonemes, " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
@@ -1170,7 +1240,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 402
+          lineNumber: 445
         },
         __self: this
       }, " Play Sample ")))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1179,20 +1249,20 @@ function (_Component) {
         md: 6,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 410
+          lineNumber: 453
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: targetCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 411
+          lineNumber: 454
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 412
+          lineNumber: 455
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1200,43 +1270,47 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 413
+          lineNumber: 456
         },
         __self: this
       }, " Target Breakdown "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 414
+          lineNumber: 457
         },
         __self: this
       }, " Speech Transcription "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         style: {
           margin: '0px 0px 10px 0px',
-          color: '#81C784'
+          color: '#81C784',
+          overflowWrap: "break-word",
+          wordWrap: "break-word"
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 415
+          lineNumber: 458
         },
         __self: this
       }, " ", wordMatching, " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 416
+          lineNumber: 459
         },
         __self: this
       }, " Processed Phonemes "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
         variant: "h5",
         style: {
           margin: '0px 0px 20px 0px',
-          color: '#81C784'
+          color: '#81C784',
+          overflowWrap: "break-word",
+          wordWrap: "break-word"
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 417
+          lineNumber: 460
         },
         __self: this
       }, " ", this.state.t_segmentedPhonemes, " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
@@ -1247,20 +1321,20 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 418
+          lineNumber: 461
         },
         __self: this
       }, " Play Target "))))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: sampleCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 490
+          lineNumber: 533
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 491
+          lineNumber: 534
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1268,15 +1342,23 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 492
+          lineNumber: 535
         },
         __self: this
-      }, " Comparision to Sample "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["ResponsiveContainer"], {
+      }, " Lorro Score Breakdown "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
+        variant: "h5",
+        gutterBottom: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 536
+        },
+        __self: this
+      }, " ", this.state.transcribeTextSample !== null ? 'Complete Lorro score breakdown complete!' : 'Processing word matching accuracy...', " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["ResponsiveContainer"], {
         width: "100%",
         aspect: 4.0 / 2.0,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 493
+          lineNumber: 537
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["RadarChart"], {
@@ -1289,32 +1371,32 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 494
+          lineNumber: 538
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["PolarGrid"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 495
+          lineNumber: 539
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["PolarAngleAxis"], {
         dataKey: "category",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 496
+          lineNumber: 540
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["PolarRadiusAxis"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 497
+          lineNumber: 541
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Tooltip"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 498
+          lineNumber: 542
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(recharts__WEBPACK_IMPORTED_MODULE_19__["Radar"], {
@@ -1326,20 +1408,20 @@ function (_Component) {
         fillOpacity: 0.6,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 499
+          lineNumber: 543
         },
         __self: this
       }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_5___default.a, {
         style: sampleCard,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 505
+          lineNumber: 549
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["CardContent"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 506
+          lineNumber: 550
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1347,19 +1429,19 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 507
+          lineNumber: 551
         },
         __self: this
       }, " View Raw Data "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanel__WEBPACK_IMPORTED_MODULE_13___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 508
+          lineNumber: 552
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanelSummary__WEBPACK_IMPORTED_MODULE_14___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 509
+          lineNumber: 553
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1370,13 +1452,13 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 510
+          lineNumber: 554
         },
         __self: this
       }, " Click to open ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_ExpansionPanelDetails__WEBPACK_IMPORTED_MODULE_15___default.a, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 512
+          lineNumber: 556
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1388,7 +1470,7 @@ function (_Component) {
         justify: "center",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 513
+          lineNumber: 557
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1401,7 +1483,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 515
+          lineNumber: 559
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1409,7 +1491,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 516
+          lineNumber: 560
         },
         __self: this
       }, " Phonemes "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1417,7 +1499,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 517
+          lineNumber: 561
         },
         __self: this
       }, " ", this.state.segmentedPhonemes, " ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1430,7 +1512,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 519
+          lineNumber: 563
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1438,7 +1520,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 520
+          lineNumber: 564
         },
         __self: this
       }, " Note Progression "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1446,7 +1528,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 521
+          lineNumber: 565
         },
         __self: this
       }, " ", this.state.noteProgression, " ")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -1459,7 +1541,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 523
+          lineNumber: 567
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1467,7 +1549,7 @@ function (_Component) {
         gutterBottom: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 524
+          lineNumber: 568
         },
         __self: this
       }, " Fundamental Frequencies "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Typography"], {
@@ -1475,7 +1557,7 @@ function (_Component) {
         variant: "body",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 525
+          lineNumber: 569
         },
         __self: this
       }, " ", this.state.frequencies, " "))))))))))));
@@ -1625,7 +1707,7 @@ function run(json) {
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!********************************!*\
   !*** multi ./pages/results.js ***!
   \********************************/
