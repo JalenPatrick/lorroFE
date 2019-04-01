@@ -298,8 +298,13 @@ class results extends Component {
             const targetArray = (targetWords).split(' ');
             // console.log(sampleArray, targetArray)
             const intersect = targetArray.filter(value => sampleArray.includes(value))
+            // console.log(intersect)
             // console.log(intersect.length, targetArray.length)
-            return (intersect.length / targetArray.length)
+            if (sampleArray.length > targetArray.length) {
+                return intersect.length / sampleArray.length;
+            } else {
+                return intersect.length / targetArray.length;
+            }
         }
     }
 
