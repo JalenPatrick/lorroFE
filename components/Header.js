@@ -18,7 +18,7 @@ const Header = () => (
         <Fonts/>
         <AppBar position="static" color="primary">
             <Toolbar>
-                <Link href="/">
+                <Link href="../">
                     <Typography variant="h5" color="inherit" gutterBottom style={{fontFamily:'Merienda'}}>
                         Lorro
                     </Typography>

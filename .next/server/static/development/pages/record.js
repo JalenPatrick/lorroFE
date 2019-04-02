@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -239,7 +239,7 @@ var Header = function Header() {
     },
     __self: this
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
-    href: "/",
+    href: "../",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 21
@@ -1443,7 +1443,7 @@ var recording = function recording() {
 
 /***/ }),
 
-/***/ 6:
+/***/ 4:
 /*!*******************************!*\
   !*** multi ./pages/record.js ***!
   \*******************************/

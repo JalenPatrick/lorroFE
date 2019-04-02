@@ -146,7 +146,7 @@ var Header = function Header() {
     },
     __self: this
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
-    href: "/",
+    href: "../",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 21
@@ -60496,7 +60496,7 @@ var recording = function recording() {
 
 /***/ }),
 
-/***/ 8:
+/***/ 4:
 /*!*******************************!*\
   !*** multi ./pages/record.js ***!
   \*******************************/
@@ -60521,5 +60521,5 @@ module.exports = dll_ecba6b44147cc8018369;
 
 /***/ })
 
-},[[8,"static/runtime/webpack.js"]]]));;
+},[[4,"static/runtime/webpack.js"]]]));;
 //# sourceMappingURL=record.js.map

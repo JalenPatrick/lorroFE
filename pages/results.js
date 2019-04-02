@@ -115,8 +115,6 @@ class results extends Component {
 
         const stringfied = JSON.stringify(sendObj)
         // console.log('results', JSON.stringify(sendObj))
-
-        let transcribe;
         
         // get info from backend and take what we need
         await axios.post(process_url, stringfied).then(response => {
@@ -125,12 +123,12 @@ class results extends Component {
             const sampleData = response.data.sample_data
             const targetData = response.data.target_data
             const res = response.data
-
+            console.log(res)
             // this is the key used to transcribe the words the user said
-            transcribe = response.data.transcribe
 
             this.setState({
                 isLoading: false,
+                procResponse: response.data,
                 rawPhonemes: sampleData.segmented_phonemes,
                 segmentedPhonemes: sampleData.backend_decoded,
                 noteProgression: sampleData.note_progression,
@@ -148,7 +146,10 @@ class results extends Component {
                 transcribeDone: false,
                 transcribeHere: null,
                 transcribeTextSample: null,
-                getTranscribeDone: false
+                getTranscribeDone: false,
+                postTiming: null,
+                wordScore: null,
+                pacingScore: null
             })
             // console.log(this.state)
         })
@@ -184,27 +185,20 @@ class results extends Component {
     // 2. Word Accuracy --> how correct the words are (use confidence from AWS)
     // 3. Timing --> raw duration of the samples
     getCompareData = (freq, timing, phonemes, words) => {
+        console.log("TIMING")
+        console.log(timing)
+
         const pitchObject = {
             category: "Pitch Matching",
             value: Math.round(freq),
             fullMark: 100 
         }
 
-        let wordAccuracyObject
-        if (!words) {
-            wordAccuracyObject = {
-                category: "Word Matching",
-                value: 0,
-                fullMark: 100 
-            }
-        } else {
-            wordAccuracyObject = {
-                category: "Word Matching",
-                value: Math.round(words * 100),
-                fullMark: 100 
-            }
+        const wordAccuracyObject = {
+            category: "Word Matching",
+            value: Math.round(words),
+            fullMark: 100 
         }
-        
 
         const phonemeAccuracyObject = {
             category: "Phoneme Matching",
@@ -224,19 +218,19 @@ class results extends Component {
 
     generateScore = (freq, timing, phonemes) => {
         // console.log('gen score', ((freq + timing + phonemes + 90)/4).toFixed(2))
-        return ((freq + timing + phonemes + 90)/4).toFixed(2);
+        return ((freq + timing + phonemes + 80)/4).toFixed(2);
     }
 
     generateScore2 = (freq, timing, phonemes, words) => {
-        // console.log('gs2', freq, timing, phonemes, words)
+        console.log('gs2', freq, timing, phonemes, words)
         // console.log('gen score 2', ((freq + timing + phonemes + words * 100)/4).toFixed(2))
-        return ((freq + timing + phonemes + words * 100)/4).toFixed(2);
+        return ((freq + timing + phonemes + words)/4).toFixed(2);
     }
 
     wordMatching = (raw) => {
+        console.log(raw)
         if (raw) {
-            const parsed = JSON.parse(raw);
-            const interpreted = parsed.results.transcripts[0].transcript;
+            const interpreted = raw.results.transcripts[0].transcript;
             // this.setState({transcribeTextTarget: interpreted})
             return interpreted;
         }     
@@ -255,17 +249,23 @@ class results extends Component {
 
     postTranscribe = () => {
         const transcribe_url = "https://3qub47bp42.execute-api.us-east-2.amazonaws.com/prod/transcribe"
-        const transcribe = this.state.transcribe
+        const proc_response = this.state.procResponse
         let result_url;
         // console.log(this.state.transcribeDone)
         if (!this.state.transcribeDone) {
-            axios.post(transcribe_url, transcribe).then(response => {
+            axios.post(transcribe_url, JSON.stringify(proc_response)).then(response => {
                 // console.log('transcribe res: ', response);
                 if (response.data.status === 'COMPLETED') {
-                    result_url = response.data.result;
-                    // console.log('done transcribe!', result_url)
-                    this.setState({transcribeDone: true, transcribeHere: result_url})
-                    // console.log('post call state', this.state)
+                    response = response.data;
+                    console.log('done transcribe!', response)
+                    this.setState({
+                        transcribeDone: true, 
+                        transcribeTextSample: response.content.results.transcripts[0].transcript,
+                        wordScore: response.word_accuracy.confidence_correct,
+                        pacingScore: (response.pacing.general_score +  response.pacing.word_score)/2,
+                        getTranscribeDone: true,
+                    })
+                    console.log('post call state', this.state)
                 }
             })
         }
@@ -274,21 +274,26 @@ class results extends Component {
         return result_url
     }
     
-    getTranscribe = (trans_url) => {
-        // console.log('get transcribe', trans_url);
-        if(!this.state.getTranscribeDone) {
-            axios.get(trans_url).then(response => {
-                // console.log(response)
-                let result = response.data.results.transcripts[0].transcript;
-                // console.log(result)
+    // getTranscribe = (trans_url) => {
+    //     // console.log('get transcribe', trans_url);
+    //     if(!this.state.getTranscribeDone) {
+    //         axios.get(trans_url).then(response => {
+    //             // console.log(response)
+    //             let result = response.data.results.transcripts[0].transcript;
+    //             let timing = response.data
+    //             console.log(timing)
 
-                this.setState({transcribeTextSample: result, getTranscribeDone: true})
+    //             this.setState({
+    //                 transcribeTextSample: result, 
+    //                 getTranscribeDone: true,
+    //                 // postTiming: 
+    //             })
 
-                // console.log('after getTranscribe', this.state)
-                return result
-            })
-        }
-    }
+    //             // console.log('after getTranscribe', this.state)
+    //             return result
+    //         })
+    //     }
+    // }
 
     matchingWords = (targetWords, sampleWords) => {
         // console.log('matching words')
@@ -313,9 +318,8 @@ class results extends Component {
     const freqSampleData = this.getFreqData(this.state.frequencies, this.state.rawPhonemes, this.state.noteProgression)
     const freqTargetData = this.getFreqData(this.state.t_frequencies, this.state.t_rawPhonemes, this.state.t_noteProgression)
     const wordMatching = this.wordMatching(this.state.wordCompare);
+    // generateScore = (freq, timing, phonemes) => {
     const lorroScore = this.generateScore(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore)
-    let compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, 0)
-
     let transcribe_link;
     let transcribe_result = null;
     let determineWords = null;
@@ -326,16 +330,11 @@ class results extends Component {
     
 
     let lorroScoreRedux = null;
-    if (this.state.transcribeTextSample === null) {
-        // console.log('got into inner')
-        // console.log(wordMatching, 'in inner')
-        transcribe_result = this.getTranscribe(this.state.transcribeHere)
-        // console.log(transcribe_result, 'transcribe result')
-    }
 
     determineWords = this.matchingWords(wordMatching, this.state.transcribeTextSample);
-    lorroScoreRedux = this.generateScore2(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
-    compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
+    // generateScore2 = (freq, timing, phonemes, words) => {
+    lorroScoreRedux = this.generateScore2(this.state.freqScore, this.state.pacingScore, this.state.rawAccuracyScore, this.state.wordScore)
+    let compareGraphData = this.getCompareData(this.state.freqScore, this.state.pacingScore || this.state.ppAccuracyScore, this.state.rawAccuracyScore, this.state.wordScore || 80)
     // console.log(transcribe_result, determineWords, lorroScoreRedux)
 
     // compareGraphData = this.getCompareData(this.state.freqScore, this.state.ppAccuracyScore, this.state.rawAccuracyScore, determineWords)
@@ -476,65 +475,6 @@ class results extends Component {
                                 </Card>
 
                                 
-                                {/* Recorded Sample */}
-                                {/* <Card style={sampleCard}>
-                                    <CardContent>
-                                        <Typography variant="h2" gutterBottom> Sample Frequencies </Typography>
-                                        <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
-                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography>
-                                        <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
-                                        <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
-                                        <ResponsiveContainer width='100%' aspect={4.0/2.0}>
-                                        <AreaChart data={freqSampleData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="phoneme">
-                                                <Label value="Detected Phoneme" offset={10} position="bottom" />
-                                            </XAxis>
-                                            <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
-                                            <Tooltip />
-                                            <Area type="monotone" dataKey="freq" stroke="#8884d8" fill="#8884d8" unit="hz" activeDot={{ r: 8 }} />
-                                            <Area type="monotone" dataKey="note" stroke="#8884d8" dot={false} />
-                                        </AreaChart>
-                                        </ResponsiveContainer>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => this.playTarget(sample_url)}
-                                        > Play Sample </Button>
-                                        <Typography variant="subtitle" style={{margin: '20px 0px 0px 0px'}}> Here's what we think you said: </Typography>
-                                        <Typography variant="h6" style={{margin: '20px 0px 0px 0px', color: '#8884d8'}}> {wordMatching} </Typography>
-                                    </CardContent>
-                                </Card> */}
-
-                                {/* Target Sample */}
-                                {/* <Card style={sampleCard}>
-                                    <CardContent>
-                                        <Typography variant="h2" gutterBottom> Target Frequencies </Typography>
-                                        <Typography variant="h4"> Your overall Lorro accuracy was __% </Typography>
-                                        <Typography variant="body"> View a detailed breakdown of your comparisson below </Typography>
-                                        <Typography variant="h4" gutterBottom> Fundamental frequencies vs. spoken phoneme </Typography>
-                                        <Typography variant="body"> Hover over the chart to see the phoneme spoken and what pitch it was spoken at </Typography>
-                                        <ResponsiveContainer width='100%' aspect={4.0/2.0}>
-                                        <AreaChart data={freqTargetData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="phoneme">
-                                                <Label value="Detected Phoneme" offset={10} position="bottom" />
-                                            </XAxis>
-                                            <YAxis label={{ value: 'Fundamental Frequency (hz)', angle: -90, position: 'insideLeft'}}/>
-                                            <Tooltip />
-                                            <Area type="monotone" dataKey="freq" stroke="#81C784" fill="#81C784" unit="hz" activeDot={{ r: 8 }} />
-                                            <Area type="monotone" dataKey="note" stroke="#81C784" dot={false} />
-                                        </AreaChart>
-                                        </ResponsiveContainer>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => this.playTarget(target_url)}
-                                        > Play Target </Button>
-                                    </CardContent>
-                                </Card> */}
-
-                                
                                 <Card style={sampleCard}>
                                     <CardContent>
                                         <Typography variant="h2" gutterBottom> Lorro Score Breakdown </Typography>
@@ -543,7 +483,7 @@ class results extends Component {
                                         <RadarChart data={compareGraphData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                             <PolarGrid />
                                             <PolarAngleAxis dataKey="category" />
-                                            <PolarRadiusAxis />
+                                            <PolarRadiusAxis domain={[0, 100]}/>
                                             <Tooltip />
                                             <Radar name='accuracy' unit='%' dataKey='value' stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
                                         </RadarChart>
