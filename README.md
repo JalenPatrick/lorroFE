@@ -11,6 +11,7 @@ a capstone project with 2 other teammates and I as part of the computer engineer
 - Next.js (https://nextjs.org/)
 - Recorderjs (https://github.com/mattdiamond/Recorderjs)
 - MaterialUI (https://github.com/mui-org/material-ui)
+- ReCharts (https://github.com/recharts/recharts)
 
 
 ## License
